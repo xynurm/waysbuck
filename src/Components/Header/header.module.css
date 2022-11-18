@@ -1,0 +1,19 @@
+.fullBtn {
+    width: 100px;
+    font-weight:bold;   
+    border-radius: 5px;
+    background-color:#BD0707;
+    border: solid #BD0707;
+}
+
+.outBtn {
+    width: 100px;
+    font-weight:bold;   
+    border-radius: 5px;
+    border: solid #BD0707;
+}
+
+.title {
+    font-weight: bold;
+    color: #BD0707;
+}
