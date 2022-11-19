@@ -45,7 +45,7 @@ export default function AddProduct() {
   const [product, setProduct] = useState({
     id: 0,
     name: "",
-    price:(0), 
+    price:0, 
     img:""
   });
   
@@ -55,9 +55,11 @@ export default function AddProduct() {
       dataProduct.forEach(element => {
         products.push(element)
       });
+      product.id = products.length;
       products.push(product)
       localStorage.setItem("DATA_PRODUCT", JSON.stringify(products))
     }else{
+      product.id = products.length;
       products.push(product)
       localStorage.setItem("DATA_PRODUCT", JSON.stringify(products))
     }

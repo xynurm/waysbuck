@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Col,
   Container,
@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import upload from "../assets/img/upload.png";
 import addTop from "../assets/img/addTop.png";
+import { useNavigate } from "react-router-dom";
 const Text = {
   Red: {
     color: "#BD0707"
@@ -42,6 +43,55 @@ const CustomBtn = {
   border: "none"
 };
 export default function AddToping() {
+  const topings = []
+
+
+  const[toping, setToping] = useState({
+    id:0,
+    name:"",
+    topPrice:0,
+    img:""
+  })
+
+  const createToping = () => {
+    let dataToping = JSON.parse(localStorage.getItem("DATA_TOPING"))
+    if(dataToping !== null){
+      dataToping.forEach(element => {
+        topings.push(element)
+      })
+      toping.id = topings.length;
+      topings.push(toping)
+      localStorage.setItem("DATA_TOPING", JSON.stringify(topings))
+    }else{
+      toping.id = topings.length;
+      topings.push(toping)
+      localStorage.setItem("DATA_TOPING", JSON.stringify(topings))
+    }
+  }
+
+  const handleOnChange = (e) => {
+    setToping({
+      ...toping,
+      [e.target.name] : e.target.value
+    })
+  }
+
+  const handlePrice = (e) => {
+    setToping({
+      ...toping,
+      topPrice: e.target.valueAsNumber
+    })
+  }
+
+  const handleOnSubmit = (e) => {
+    window.location.reload()
+    createToping()
+    
+  }
+
+// urlImage
+  // https://www.linkpicture.com/q/top1.png - top8
+
   return (
     <Container>
       <Row>
@@ -49,43 +99,26 @@ export default function AddToping() {
           <div className="pb-5">
             <h4 style={Text.Red} className="fw-bold">Toping</h4>
           </div>
-          <FormGroup class="mb-4">
-            <FormControl placeholder="Name Toping" style={Input}></FormControl>
+          <FormGroup className="mb-4">
+            <FormControl placeholder="Name Toping" type="text" name="name" onChange={handleOnChange} style={Input}></FormControl>
           </FormGroup>
           <FormGroup className="mb-4">
-            <FormControl placeholder="Price" style={Input}></FormControl>
+            <FormControl placeholder="Price" type="number" name="topPrice" onChange={handlePrice} style={Input}></FormControl>
           </FormGroup>
           <FormGroup className="mb-4">
             <FormControl type="file" id="upload" hidden />
-            <div classNames="input-group flex-nowrap">
-              <FormGroup>
-                <label
-                  for="upload"
-                  className="input-group-text "
-                  id="addon-wrapping"
-                  style={Upload}
-                >
-                  <Col sm={11} className="text-start text-muted">
-                    Photo Product
-                  </Col>
-                  <Col>
-                    <img src={upload} />
-                  </Col>
-                </label>
-              </FormGroup>
-            </div>
+            <FormControl placeholder="Url Image" type="text" name="img" onChange={handleOnChange} style={Input}></FormControl>
           </FormGroup>
           <div className="d-grid gap-2 mb-3">
-            <Button style={CustomBtn} className="fw-semibold">
-              Add Product
+            <Button style={CustomBtn} onClick={handleOnSubmit} className="fw-semibold">
+              Add Toping
             </Button>
           </div>
         </Col>
-        <Col sm={5}>
-          <div>
-            <img src={addTop} />
-          </div>
-        </Col>
+        <Col sm={5} className="pt-5 px-5">
+      
+       <img src={toping.img}  className="rounded-4" alt="product-img"/>
+      </Col>
       </Row>
     </Container>
   );

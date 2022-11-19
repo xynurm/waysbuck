@@ -1,7 +1,10 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import Toping from "./Toping";
+
+
 export default function ProdDetail(props) {
+  const TopingList =JSON.parse(localStorage.getItem("DATA_TOPING"))
   return (
     <div className="row ms-3 ">
       <div className="col-sm-6">
@@ -9,7 +12,8 @@ export default function ProdDetail(props) {
           src={props.img}
           className=" float-md-start"
           style={{ borderRadius: "10px" }}
-          width="80%" alt=""
+          width="80%"
+          alt=""
         />
       </div>
       <div className="col">
@@ -19,7 +23,7 @@ export default function ProdDetail(props) {
         <p className="fs-4 pb-5" style={{ color: "#974A4A" }}>
           {props.price}
         </p>
-        <Toping />
+       <Toping  />
         <div
           className="d-flex justify-content-between pb-5"
           style={{ color: "#974A4A" }}
@@ -28,7 +32,7 @@ export default function ProdDetail(props) {
             <h4>Total</h4>
           </div>
           <div>
-            <h4>{props.price}</h4>
+            <h4>{props.totalPrice}</h4>
           </div>
         </div>
         <div className="col-sm-12">

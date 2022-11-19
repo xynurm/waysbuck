@@ -37,9 +37,17 @@ export default function Auth() {
   });
 
   const createUser = () => {
-    user.id = users.length;
-    users.push(user);
-    localStorage.setItem("DATA_USERS", JSON.stringify(users));
+    let dataUser = JSON.parse(localStorage.getItem("DARA_USERS"))
+    if (dataUser !== null){
+      dataUser.forEach(element => {
+        users.push(element)
+      })
+      users.push(user)
+      localStorage.setItem("DATA_USERS", JSON.stringify(users))
+    }else{
+      users.push(user)
+      localStorage.setItem("DATA_USERS", JSON.stringify(users))
+    }
   };
 
   const handleOnChangeRegister = (e) => {
@@ -104,10 +112,10 @@ export default function Auth() {
   };
 
   const Logout = () => {
-    window.location.reload(false);
+    window.location.reload();
     getLogin.pop()
-    const parsed = JSON.stringify(getLogin);
-    localStorage.setItem("login", parsed);
+
+    localStorage.setItem("login", JSON.stringify(getLogin));
   };
 
   const [showlogin, setShowLogin] = useState(false);

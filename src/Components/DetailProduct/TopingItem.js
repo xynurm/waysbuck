@@ -1,19 +1,24 @@
-import React from "react";
+import React,{useState} from "react";
 import { Col } from "react-bootstrap";
-
+import styles from "./DetailProduct.Module.css"
 export default function TopingItem(props) {
+
   return (
     <Col className="px-1">
       <div
         className="card align-items-center "
         style={{ width: "125px", border: "none" }}
       >
+        <input  type="checkbox" id={props.label} className={styles} />
+        <label htmlFor={props.label}>
         <img
           src={props.img}
           className="card-img-top mb-2"
           style={{ width: "75px" }}
           alt=""
-        ></img>
+        />
+        </label>
+
         <p style={{ color: "#BD0707", fontSize:"14px", textAlign:"center", }}>{props.name}</p>
       </div>
     </Col>

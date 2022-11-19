@@ -2,6 +2,7 @@ import React from "react";
 import ItemsTransaction from "./ItemsTransaction";
 import qr from "../../assets/img/qr.png";
 import logo from "../../assets/img/waysbuck_logo.png";
+import { Badge } from "react-bootstrap";
 export default function Transaction() {
   return (
     <div className="col-sm-7">
@@ -22,6 +23,12 @@ export default function Transaction() {
                 </div>
                 <div className="mb-3">
                   <img src={qr} width={90} />
+                </div>
+               <div style={{ backgroundColor:"#E6FBFF", borderRadius:"5px", }}>
+                <p className="fw-semibold" style={{ color:"#00D1FF", fontSize:"14px" }}>On The Way</p>
+               </div>
+               <div className="mb-3">
+                <p className="fw-semibold" style={{ color: "#974A4A" }}>Sub Total : 69.000</p>
                 </div>
               </div>
             </div>
