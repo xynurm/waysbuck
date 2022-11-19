@@ -1,16 +1,13 @@
-import React, {useState } from "react";
-import {
-  Button,
-  Modal,
-  Form,
-  Nav,
-  NavDropdown
-} from "react-bootstrap";
-import profile from "../../assets/img/profile.png";
-import cart from "../../assets/img/cart.png";
-import styles from "./header.module.css";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Modal, Nav, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
+import cart from "../../assets/img/cart.png";
+import profile from "../../assets/img/profile.png";
+import BtnAuth from "./BtnAuth";
+import BtnModal from "./BtnModal";
+import FormGroupAuth from "./FormGroupAuth";
+import FooterText from "./FooterText";
+import styles from "./header.module.css";
 
 const Styles = {
   Title: {
@@ -29,42 +26,90 @@ const Styles = {
 };
 
 export default function Auth() {
-  const [islogin, setIsLogin] = useState(false);
-
-  const [login, setLogin] = useState({
-    email: "",
-    password: ""
-  });
+  const users = [];
 
   const [user, setUser] = useState({
+    id: 0,
     email: "",
     password: "",
-    fullname: ""
+    fullname: "",
+    role: "user"
   });
 
-  const handleOnChange = (e) => {
-    setLogin({
-      ...login,
-      [e.target.name]: e.target.value
-    });
+  const createUser = () => {
+    user.id = users.length;
+    users.push(user);
+    const parsed = JSON.stringify(users);
+    localStorage.setItem("DATA_USERS", parsed);
+  };
+
+  const handleOnChangeRegister = (e) => {
     setUser({
       ...user,
       [e.target.name]: e.target.value
     });
   };
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmitRegister = (e) => {
     e.preventDefault();
-    setShowLogin(false);
-    setIsLogin(true);
-    setShowRegister(false);
-
-    console.log(login);
+    createUser();
   };
 
+  
+  const [login, setLogin] = useState({
+    email: "",
+    password: "",
+    fullname:""
+  });
 
 
-  const handleLogout = () => setIsLogin(false);
+
+  const getUser = () => {
+    let storage= JSON.parse(localStorage.getItem("DATA_USERS"));
+    storage.forEach((element) => {
+      if (
+        login.email === element.email &&
+        login.password === element.password 
+       
+      ) {
+       
+        users.push(login)
+       
+
+        localStorage.setItem("login", JSON.stringify(users));
+        handleCloseLogin()
+      } else {
+        return alert("wrong password");
+      }
+    });
+  };
+
+  const dataLogin = JSON.parse(localStorage.getItem("login"));
+  let getLogin = [...dataLogin];
+  
+
+
+  const handleOnChangeLogin = (e) => {
+    let storage= JSON.parse(localStorage.getItem("DATA_USERS"));
+    setLogin({
+      ...login,
+      [e.target.name]: e.target.value,
+      fullname: storage[0].fullname,
+    });
+  };
+
+  const handleOnSubmitLogin = (e) => {
+    e.preventDefault();
+    getUser();
+    
+  };
+
+  const Logout = () => {
+    window.location.reload(false);
+    getLogin.pop()
+    const parsed = JSON.stringify(getLogin);
+    localStorage.setItem("login", parsed);
+  };
 
   const [showlogin, setShowLogin] = useState(false);
   const handleCloseLogin = () => setShowLogin(false);
@@ -74,30 +119,35 @@ export default function Auth() {
   const handleCloseRegister = () => setShowRegister(false);
   const handleShowRegister = () => setShowRegister(true);
 
-  const linkRegister = ()=>{
+  const linkRegister = () => {
     setShowLogin(false);
     setShowRegister(true);
-  }
+  };
 
-  const linkLogin = ()=>{
+  const linkLogin = () => {
     setShowLogin(true);
     setShowRegister(false);
-  }
+  };
 
-  if (islogin) {
+  useEffect(()=>{
+    
+  })
+
+
+  if (getLogin.length !==0 ) {
     return (
       <>
         <Nav.Link>
-          <img src={cart}/>
+          <img src={cart} />
         </Nav.Link>
         <Nav.Link align="center">
-          <NavDropdown
-            title={<img src={profile}/>}
-            id="basic-nav-dropdown"
-          >
-            <NavDropdown.Item className="fw-bold"><Link to="/profile" className="text-decoration-none text-dark" >Profile
-            </Link></NavDropdown.Item>
-            <NavDropdown.Item className="fw-bold" onClick={handleLogout}>
+          <NavDropdown title={<img src={profile} />} id="basic-nav-dropdown">
+            <NavDropdown.Item className="fw-bold">
+              <Link to="/profile" className="text-decoration-none text-dark">
+                Profile
+              </Link>
+            </NavDropdown.Item>
+            <NavDropdown.Item className="fw-bold" onClick={Logout}>
               Logout
             </NavDropdown.Item>
           </NavDropdown>
@@ -108,7 +158,7 @@ export default function Auth() {
   return (
     <>
       {/* Login */}
-      <Nav.Link>
+      {/* <Nav.Link>
         <Button
           variant="outline-danger"
           size="sm"
@@ -162,9 +212,47 @@ export default function Auth() {
             </Form>
           </Modal.Body>
         </Modal>
-      </Nav.Link>
-      {/* register */}
+      </Nav.Link> */}
+
       <Nav.Link>
+        <BtnModal
+          name="Login"
+          variant="outline-danger"
+          onClick={handleShowLogin}
+        />
+
+        <Modal show={showlogin} onHide={handleCloseLogin} centered>
+          <Modal.Body>
+            <Modal.Title className="mb-4 fs-2 fw-bold" style={Styles.Title}>
+              Login
+            </Modal.Title>
+            <Form>
+              <FormGroupAuth
+                type="email"
+                name="email"
+                placeholder="email"
+                onChange={handleOnChangeLogin}
+              />
+              <FormGroupAuth
+                type="password"
+                name="password"
+                placeholder="password"
+                onChange={handleOnChangeLogin}
+              />
+              <BtnAuth
+                variant="danger"
+                name="Login"
+                onClick={handleOnSubmitLogin}
+              />
+              <FooterText title="Don't have account?" click={linkRegister} />
+            </Form>
+          </Modal.Body>
+        </Modal>
+      </Nav.Link>
+
+      {/* register */}
+
+      {/* <Nav.Link>
         <Button
           variant="danger"
           style={Styles.Button}
@@ -231,6 +319,48 @@ export default function Auth() {
               <div className="text-center">
                 <p className="fw-semibold">Already have account? Klick <Link onClick={linkLogin}>Here</Link>  </p>
               </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
+      </Nav.Link> */}
+
+      <Nav.Link>
+        <BtnModal
+          name="Register"
+          variant="danger"
+          style={{ backgroundColor: "#BD0707" }}
+          onClick={handleShowRegister}
+        />
+        <Modal show={showregister} onHide={handleCloseRegister} centered>
+          <Modal.Body>
+            <Modal.Title className="mb-4 fs-2 fw-bold" style={Styles.Title}>
+              Register
+            </Modal.Title>
+            <Form onSubmit={handleOnSubmitRegister}>
+              <FormGroupAuth
+                type="email"
+                name="email"
+                placeholder="email"
+                onChange={handleOnChangeRegister}
+              />
+              <FormGroupAuth
+                type="password"
+                name="password"
+                placeholder="password"
+                onChange={handleOnChangeRegister}
+              />
+              <FormGroupAuth
+                type="text"
+                name="fullname"
+                placeholder="Full Name"
+                onChange={handleOnChangeRegister}
+              />
+              <BtnAuth
+                variant="danger"
+                name="Register"
+                onClick={handleOnSubmitRegister}
+              />
+              <FooterText title="Don't have account?" click={linkLogin} />
             </Form>
           </Modal.Body>
         </Modal>

@@ -12,6 +12,7 @@ export default function TopingItem(props) {
           src={props.img}
           className="card-img-top mb-2"
           style={{ width: "75px" }}
+          alt=""
         ></img>
         <p style={{ color: "#BD0707", fontSize:"14px", textAlign:"center", }}>{props.name}</p>
       </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
   Col,
   Container,
@@ -42,7 +42,54 @@ const CustomBtn = {
   border: "none"
 };
 
+
+
+
 export default function AddProduct() {
+  const products = []
+
+  const [product, setProduct] = useState({
+    id: 0,
+    name: "",
+    price: 0,
+    img:""
+  });
+  
+  const createProduct = () => {
+    let dataProduct = JSON.parse(localStorage.getItem("DATA_PRODUCT"));
+    if (dataProduct !== null){
+      dataProduct.forEach(element => {
+        products.push(element)
+      });
+      dataProduct.push(product)
+      localStorage.setItem("DATA_PRODUCT", JSON.stringify(dataProduct))
+    }else{
+      products.push(product)
+      localStorage.setItem("DATA_PRODUCT", JSON.stringify(products))
+    }
+   
+  };
+
+  const handleOnChange = (e) => {
+    setProduct({
+      ...product,
+      [e.target.name] : e.target.value
+    })
+  }
+
+  // const handleOnChangeImg = (e) => {
+  //   setProduct({
+  //     ...product,
+  //    img : document.getElementById('input').files[0];
+  //   })
+  // }
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault()
+    createProduct()
+
+  }
+
   return (
     <Container>
     <Row>
@@ -50,18 +97,17 @@ export default function AddProduct() {
         <div className="pb-5">
           <h4 style={Text.Red} className="fw-bold">Product</h4>
         </div>
-        <FormGroup class="mb-4">
-          <FormControl placeholder="Name Toping" style={Input}></FormControl>
+        <FormGroup className="mb-4">
+          <FormControl placeholder="Name Product" type="text" onChange={handleOnChange} name="name" style={Input}/>
         </FormGroup>
         <FormGroup className="mb-4">
-          <FormControl placeholder="Price" style={Input}></FormControl>
+          <FormControl placeholder="Price" text="number" onChange={handleOnChange} name="price" style={Input}></FormControl>
         </FormGroup>
         <FormGroup className="mb-5">
-          <FormControl type="file" id="upload" hidden />
-          <div classNames="input-group flex-nowrap">
-            <FormGroup>
+          <FormControl type="text" id="upload" name="img" onChange={handleOnChange}  />
+            {/* <FormGroup>
               <label
-                for="upload"
+                htmlFor="upload"
                 className="input-group-text "
                 id="addon-wrapping"
                 style={Upload}
@@ -73,11 +119,10 @@ export default function AddProduct() {
                   <img src={upload} />
                 </Col>
               </label>
-            </FormGroup>
-          </div>
+            </FormGroup> */}
         </FormGroup>
         <div className="d-grid gap-2 mt-3">
-          <Button style={CustomBtn} className="fw-semibold">
+          <Button onClick={handleOnSubmit} style={CustomBtn} className="fw-semibold">
             Add Product
           </Button>
         </div>

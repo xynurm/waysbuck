@@ -1,8 +1,20 @@
 import React from "react";
-import DetailProduct from "../Components/DetailProduct";;
+import { Container } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import ProductList from "../Components/LetsOrder/ProductList";
+import ProdDetail from "../Components/DetailProduct/ProdDetail";
 
-export default function ProductDetail() {
+export default function DetailProduct() {
+  const { id } = useParams();
+  // const ProductList =JSON.parse(localStorage.getItem("DATA_PRODUCT"))
   return (
-   <DetailProduct/>
+    <Container>
+      <ProdDetail
+        name={ProductList[id].name}
+        price={ProductList[id].price}
+        img={ProductList[id].img}
+        
+      />
+    </Container>
   );
 }
