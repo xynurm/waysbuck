@@ -1,12 +1,13 @@
 import React from "react";
 import { Container, Row } from "react-bootstrap";
 import OrderItems from "./OrderItems";
-import ProductList from "./ProductList";
+// import ProductList from "./ProductList";
 
 
 export default function LetsOrder() {
 
-  // const ProductList =JSON.parse(localStorage.getItem("DATA_PRODUCT"))
+  const ProductList =JSON.parse(localStorage.getItem("DATA_PRODUCT"))
+  
   return (
     <Container className="mt-4 ">
       <div className="mb-5">
@@ -16,15 +17,21 @@ export default function LetsOrder() {
       </div>
       <div className="">
         <Row>
+        
           {ProductList.map((item,index)=> (
+          
              <OrderItems
+             
              key={index}
              name={item.name}
-             price={item.price}
+             price={item.price.toLocaleString('id', { style: 'currency', currency: 'IDR' })}
              img={item.img}
             id={index}
            />
           ) )}
+      
+        
+        
         </Row>
       </div>
     </Container>

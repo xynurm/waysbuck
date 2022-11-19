@@ -39,8 +39,7 @@ export default function Auth() {
   const createUser = () => {
     user.id = users.length;
     users.push(user);
-    const parsed = JSON.stringify(users);
-    localStorage.setItem("DATA_USERS", parsed);
+    localStorage.setItem("DATA_USERS", JSON.stringify(users));
   };
 
   const handleOnChangeRegister = (e) => {
@@ -158,62 +157,6 @@ export default function Auth() {
   return (
     <>
       {/* Login */}
-      {/* <Nav.Link>
-        <Button
-          variant="outline-danger"
-          size="sm"
-          className={styles.outBtn}
-          onClick={handleShowLogin}
-        >
-          Login
-        </Button>
-
-        <Modal show={showlogin} onHide={handleCloseLogin} centered>
-          <Modal.Body>
-            <Modal.Title className="mb-4 fs-2 fw-bold" style={Styles.Title}>
-              Login
-            </Modal.Title>
-            <Form onSubmit={handleOnSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Control
-                  onChange={handleOnChange}
-                  value={login.email}
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  style={Styles.Input}
-                ></Form.Control>
-              </Form.Group>
-
-              <Form.Group className="mb-4">
-                <Form.Control
-                  onChange={handleOnChange}
-                  value={login.password}
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  style={Styles.Input}
-                ></Form.Control>
-              </Form.Group>
-
-              <div className="d-grid gap-2 mb-3">
-                <Button
-                  onClick={handleOnSubmit}
-                  variant="danger"
-                  className="fw-semibold"
-                  style={Styles.CustomBtn}
-                >
-                  Login
-                </Button>
-              </div>
-              <div className="text-center">
-                <p className="fw-semibold">Don't have account? Klick <Link onClick={linkRegister} > Here</Link> </p>
-              </div>
-            </Form>
-          </Modal.Body>
-        </Modal>
-      </Nav.Link> */}
-
       <Nav.Link>
         <BtnModal
           name="Login"
@@ -251,78 +194,6 @@ export default function Auth() {
       </Nav.Link>
 
       {/* register */}
-
-      {/* <Nav.Link>
-        <Button
-          variant="danger"
-          style={Styles.Button}
-          size="sm"
-          className={styles.fullBtn}
-          onClick={handleShowRegister}
-        >
-          Register
-        </Button>
-
-        <Modal show={showregister} onHide={handleCloseRegister} centered>
-          <Modal.Body>
-            <Modal.Title
-              className="mb-4 col-4 fs-2 fw-bold"
-              style={Styles.Title}
-            >
-              Register
-            </Modal.Title>
-            <Form onSubmit={handleOnSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Control
-                  type="email"
-                  onChange={handleOnChange}
-                  value={user.email}
-                  name="email"
-                  style={Styles.Input}
-                  placeholder="Email"
-                ></Form.Control>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  style={Styles.Input}
-                  onChange={handleOnChange}
-                  value={user.password}
-                ></Form.Control>
-              </Form.Group>
-
-              <Form.Group className="mb-4">
-                <Form.Control
-                  type="text"
-                  name="fullname"
-                  style={Styles.Input}
-                  onChange={handleOnChange}
-                  value={user.fullname}
-                  placeholder="Full Name"
-                ></Form.Control>
-              </Form.Group>
-
-              <div className="d-grid gap-2 mb-3">
-                <Button
-                  // type="submit"
-                  onClick={handleOnSubmit}
-                  className="fw-semibold"
-                  variant="danger"
-                  style={Styles.CustomBtn}
-                >
-                  Register
-                </Button>
-              </div>
-              <div className="text-center">
-                <p className="fw-semibold">Already have account? Klick <Link onClick={linkLogin}>Here</Link>  </p>
-              </div>
-            </Form>
-          </Modal.Body>
-        </Modal>
-      </Nav.Link> */}
 
       <Nav.Link>
         <BtnModal

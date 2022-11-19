@@ -1,8 +1,8 @@
 import React from "react";
 import { Container, Image, Nav, Navbar } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import Logo from "../../assets/img/waysbuck_logo.png";
 import Auth from "./Auth";
-import { Link } from "react-router-dom";
 export default function Header() {
   return (
     <>
@@ -10,7 +10,7 @@ export default function Header() {
         <Container>
           <Navbar.Brand>
             <Link to="/">
-            <Image src={Logo} width="80px" height="80px"></Image>
+              <Image src={Logo} width="80px" height="80px"></Image>
             </Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -18,9 +18,8 @@ export default function Header() {
             id="responsive-navbar-nav"
             className="justify-content-end"
           >
-            <Nav  >
-               <Auth/>
-               {/* <Login /> */}
+            <Nav>
+              <Auth />
             </Nav>
           </Navbar.Collapse>
         </Container>

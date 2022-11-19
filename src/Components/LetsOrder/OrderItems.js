@@ -9,7 +9,8 @@ export default function OrderItems(props) {
  
 
   return (
-    <Col>
+    
+      <Col sm={3}>
       <Card
         className="mb-4"
         onClick={() =>{navigate(`/detail/${props.id}`)}}
@@ -31,6 +32,8 @@ export default function OrderItems(props) {
         </Card.Body>
       </Card>
     </Col>
+ 
+  
   
   );
 }

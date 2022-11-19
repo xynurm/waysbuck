@@ -7,7 +7,8 @@ import {
   Row,
   Button
 } from "react-bootstrap";
-import upload from "../assets/img/upload.png";
+import { useNavigate } from "react-router-dom";
+
 import addProd from "../assets/img/addProd.png";
 const Text = {
   Red: {
@@ -26,14 +27,6 @@ const Input = {
   borderRadius: "5px"
 };
 
-const Upload = {
-  border: "2px solid #BD0707",
-
-  height: "50px",
-  backgroundColor: "rgba(224, 200, 200, 0.25)",
-  borderRadius: "5px",
-  placeholder: "none"
-};
 
 const CustomBtn = {
   backgroundColor: "#BD0707",
@@ -47,11 +40,12 @@ const CustomBtn = {
 
 export default function AddProduct() {
   const products = []
+  const navigate = useNavigate()
 
   const [product, setProduct] = useState({
     id: 0,
     name: "",
-    price: 0,
+    price:(0), 
     img:""
   });
   
@@ -61,8 +55,8 @@ export default function AddProduct() {
       dataProduct.forEach(element => {
         products.push(element)
       });
-      dataProduct.push(product)
-      localStorage.setItem("DATA_PRODUCT", JSON.stringify(dataProduct))
+      products.push(product)
+      localStorage.setItem("DATA_PRODUCT", JSON.stringify(products))
     }else{
       products.push(product)
       localStorage.setItem("DATA_PRODUCT", JSON.stringify(products))
@@ -75,24 +69,34 @@ export default function AddProduct() {
       ...product,
       [e.target.name] : e.target.value
     })
+    
   }
 
-  // const handleOnChangeImg = (e) => {
-  //   setProduct({
-  //     ...product,
-  //    img : document.getElementById('input').files[0];
-  //   })
-  // }
+  const handlePrice = (e) => {
+    setProduct({
+      ...product,
+      price: e.target.valueAsNumber
+    })
+  }
+
+  
+
 
   const handleOnSubmit = (e) => {
     e.preventDefault()
     createProduct()
-
+    navigate("/")
   }
 
+  // link img
+  // prod 1 : https://www.linkpicture.com/q/prod1.png
+// prod 2: https://www.linkpicture.com/q/prod2.png
+// prod 3: https://www.linkpicture.com/q/prod3.png
+// prod 4 : https://www.linkpicture.com/q/prod3.png
   return (
     <Container>
-    <Row>
+     <Row>
+    
       <Col className="pt-5 px-5">
         <div className="pb-5">
           <h4 style={Text.Red} className="fw-bold">Product</h4>
@@ -101,25 +105,10 @@ export default function AddProduct() {
           <FormControl placeholder="Name Product" type="text" onChange={handleOnChange} name="name" style={Input}/>
         </FormGroup>
         <FormGroup className="mb-4">
-          <FormControl placeholder="Price" text="number" onChange={handleOnChange} name="price" style={Input}></FormControl>
+          <FormControl placeholder="Price" type="number" onChange={handlePrice} name="price" style={Input}></FormControl>
         </FormGroup>
         <FormGroup className="mb-5">
-          <FormControl type="text" id="upload" name="img" onChange={handleOnChange}  />
-            {/* <FormGroup>
-              <label
-                htmlFor="upload"
-                className="input-group-text "
-                id="addon-wrapping"
-                style={Upload}
-              >
-                <Col sm={11} className="text-start text-muted">
-                  Photo Product
-                </Col>
-                <Col>
-                  <img src={upload} />
-                </Col>
-              </label>
-            </FormGroup> */}
+          <FormControl type="text" name="img" onChange={handleOnChange} placeHolder="Url Image" style={Input} />
         </FormGroup>
         <div className="d-grid gap-2 mt-3">
           <Button onClick={handleOnSubmit} style={CustomBtn} className="fw-semibold">
@@ -127,12 +116,13 @@ export default function AddProduct() {
           </Button>
         </div>
       </Col>
-      <Col sm={5}>
-        <div>
-          <img src={addProd}/>
-        </div>
+      <Col sm={5} className="pt-5 px-5">
+      
+       <img src={product.img}  className="rounded-4" alt="product-img"/>
       </Col>
+    
     </Row>
+ 
   </Container>
   )
 }
