@@ -4,7 +4,9 @@ import Toping from "./Toping";
 
 
 export default function ProdDetail(props) {
-  const TopingList =JSON.parse(localStorage.getItem("DATA_TOPING"))
+  
+  
+ 
   return (
     <div className="row ms-3 ">
       <div className="col-sm-6">
@@ -23,16 +25,16 @@ export default function ProdDetail(props) {
         <p className="fs-4 pb-5" style={{ color: "#974A4A" }}>
           {props.price}
         </p>
-       <Toping  />
+       <Toping />
         <div
           className="d-flex justify-content-between pb-5"
           style={{ color: "#974A4A" }}
         >
           <div>
-            <h4>Total</h4>
+            <h4 >Total</h4>
           </div>
           <div>
-            <h4>{props.totalPrice}</h4>
+            <h4 name="total" >{props.totalPrice}</h4>
           </div>
         </div>
         <div className="col-sm-12">

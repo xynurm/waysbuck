@@ -1,6 +1,6 @@
-import React,{useState} from "react";
+import React from "react";
 import { Col } from "react-bootstrap";
-import styles from "./DetailProduct.Module.css"
+import styles from "./DetailProduct.Module.css";
 export default function TopingItem(props) {
 
   return (
@@ -9,7 +9,7 @@ export default function TopingItem(props) {
         className="card align-items-center "
         style={{ width: "125px", border: "none" }}
       >
-        <input  type="checkbox" id={props.label} className={styles} />
+        <input value={props.value}  type="checkbox" name={props.typeName} id={props.label} className={styles} />
         <label htmlFor={props.label}>
         <img
           src={props.img}
@@ -22,5 +22,6 @@ export default function TopingItem(props) {
         <p style={{ color: "#BD0707", fontSize:"14px", textAlign:"center", }}>{props.name}</p>
       </div>
     </Col>
+    
   );
 }

@@ -1,19 +1,25 @@
 import React from "react";
 import { Card, Col } from "react-bootstrap";
-import {  useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 export default function OrderItems(props) {
-  const navigate = useNavigate()
-  
- 
-
+  const navigate = useNavigate();
+  // const getLogin = JSON.parse(localStorage.getItem("login"));
+  // let redirect = null;
+  // if (getLogin.length !== 0) {
+  //   redirect = () => {
+  //     navigate(`/detail/${props.id}`);
+  //   };
+  // } else {
+  //   //
+  // }
   return (
-    
-      <Col sm={3}>
+    <Col sm={3}>
       <Card
         className="mb-4"
-        onClick={() =>{navigate(`/detail/${props.id}`)}}
+        onClick={() => {
+          navigate(`/detail/${props.id}`);
+        }}
         style={{
           width: "241px",
           backgroundColor: "#F6DADA",
@@ -32,8 +38,5 @@ export default function OrderItems(props) {
         </Card.Body>
       </Card>
     </Col>
- 
-  
-  
   );
 }

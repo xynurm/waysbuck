@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Button, Form, Modal, Nav, NavDropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Form, Modal, Nav, NavDropdown } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import cart from "../../assets/img/cart.png";
 import profile from "../../assets/img/profile.png";
 import BtnAuth from "./BtnAuth";
 import BtnModal from "./BtnModal";
-import FormGroupAuth from "./FormGroupAuth";
 import FooterText from "./FooterText";
-import styles from "./header.module.css";
+import FormGroupAuth from "./FormGroupAuth";
 
 const Styles = {
   Title: {
@@ -25,7 +24,9 @@ const Styles = {
   }
 };
 
-export default function Auth() {
+export default function Auth(props) {
+  const navigate = useNavigate()
+
   const users = [];
 
   const [user, setUser] = useState({
@@ -37,7 +38,7 @@ export default function Auth() {
   });
 
   const createUser = () => {
-    let dataUser = JSON.parse(localStorage.getItem("DARA_USERS"))
+    let dataUser = JSON.parse(localStorage.getItem("DATA_USERS"))
     if (dataUser !== null){
       dataUser.forEach(element => {
         users.push(element)
@@ -112,7 +113,7 @@ export default function Auth() {
   };
 
   const Logout = () => {
-    window.location.reload();
+    navigate("/")
     getLogin.pop()
 
     localStorage.setItem("login", JSON.stringify(getLogin));
@@ -136,15 +137,13 @@ export default function Auth() {
     setShowRegister(false);
   };
 
-  useEffect(()=>{
-    
-  })
+ 
 
 
   if (getLogin.length !==0 ) {
     return (
       <>
-        <Nav.Link>
+        <Nav.Link className="pt-4 px-4">
           <img src={cart} />
         </Nav.Link>
         <Nav.Link align="center">
@@ -159,91 +158,95 @@ export default function Auth() {
             </NavDropdown.Item>
           </NavDropdown>
         </Nav.Link>
+   
       </>
     );
   }
   return (
-    <>
-      {/* Login */}
-      <Nav.Link>
-        <BtnModal
-          name="Login"
-          variant="outline-danger"
-          onClick={handleShowLogin}
-        />
+      <>
+        {/* Login */}
+      
+        <Nav.Link>
+          <BtnModal
+            name="Login"
+            variant="outline-danger"
+            onClick={handleShowLogin}
+          />
+  
+          <Modal show={showlogin} onHide={handleCloseLogin} centered>
+            <Modal.Body>
+              <Modal.Title className="mb-4 fs-2 fw-bold" style={Styles.Title}>
+                Login
+              </Modal.Title>
+              <Form>
+                <FormGroupAuth
+                  type="email"
+                  name="email"
+                  placeholder="email"
+                  onChange={handleOnChangeLogin}
+                />
+                <FormGroupAuth
+                  type="password"
+                  name="password"
+                  placeholder="password"
+                  onChange={handleOnChangeLogin}
+                />
+                <BtnAuth
+                  variant="danger"
+                  name="Login"
+                  onClick={handleOnSubmitLogin}
+                />
+                <FooterText title="Don't have account?" click={linkRegister} />
+              </Form>
+            </Modal.Body>
+          </Modal>
+        </Nav.Link>
+  
+        {/* register */}
+  
+        <Nav.Link>
+          <BtnModal
+            name="Register"
+            variant="danger"
+            style={{ backgroundColor: "#BD0707" }}
+            onClick={handleShowRegister}
+          />
+          <Modal show={showregister} onHide={handleCloseRegister} centered>
+            <Modal.Body>
+              <Modal.Title className="mb-4 fs-2 fw-bold" style={Styles.Title}>
+                Register
+              </Modal.Title>
+              <Form onSubmit={handleOnSubmitRegister}>
+                <FormGroupAuth
+                  type="email"
+                  name="email"
+                  placeholder="email"
+                  onChange={handleOnChangeRegister}
+                />
+                <FormGroupAuth
+                  type="password"
+                  name="password"
+                  placeholder="password"
+                  onChange={handleOnChangeRegister}
+                />
+                <FormGroupAuth
+                  type="text"
+                  name="fullname"
+                  placeholder="Full Name"
+                  onChange={handleOnChangeRegister}
+                />
+                <BtnAuth
+                  variant="danger"
+                  name="Register"
+                  onClick={handleOnSubmitRegister}
+                />
+                <FooterText title="Don't have account?" click={linkLogin} />
+              </Form>
+            </Modal.Body>
+          </Modal>
+        </Nav.Link>
+      </>
+    );
+  }
+ 
 
-        <Modal show={showlogin} onHide={handleCloseLogin} centered>
-          <Modal.Body>
-            <Modal.Title className="mb-4 fs-2 fw-bold" style={Styles.Title}>
-              Login
-            </Modal.Title>
-            <Form>
-              <FormGroupAuth
-                type="email"
-                name="email"
-                placeholder="email"
-                onChange={handleOnChangeLogin}
-              />
-              <FormGroupAuth
-                type="password"
-                name="password"
-                placeholder="password"
-                onChange={handleOnChangeLogin}
-              />
-              <BtnAuth
-                variant="danger"
-                name="Login"
-                onClick={handleOnSubmitLogin}
-              />
-              <FooterText title="Don't have account?" click={linkRegister} />
-            </Form>
-          </Modal.Body>
-        </Modal>
-      </Nav.Link>
-
-      {/* register */}
-
-      <Nav.Link>
-        <BtnModal
-          name="Register"
-          variant="danger"
-          style={{ backgroundColor: "#BD0707" }}
-          onClick={handleShowRegister}
-        />
-        <Modal show={showregister} onHide={handleCloseRegister} centered>
-          <Modal.Body>
-            <Modal.Title className="mb-4 fs-2 fw-bold" style={Styles.Title}>
-              Register
-            </Modal.Title>
-            <Form onSubmit={handleOnSubmitRegister}>
-              <FormGroupAuth
-                type="email"
-                name="email"
-                placeholder="email"
-                onChange={handleOnChangeRegister}
-              />
-              <FormGroupAuth
-                type="password"
-                name="password"
-                placeholder="password"
-                onChange={handleOnChangeRegister}
-              />
-              <FormGroupAuth
-                type="text"
-                name="fullname"
-                placeholder="Full Name"
-                onChange={handleOnChangeRegister}
-              />
-              <BtnAuth
-                variant="danger"
-                name="Register"
-                onClick={handleOnSubmitRegister}
-              />
-              <FooterText title="Don't have account?" click={linkLogin} />
-            </Form>
-          </Modal.Body>
-        </Modal>
-      </Nav.Link>
-    </>
-  );
-}

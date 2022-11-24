@@ -1,8 +1,7 @@
 import React from "react";
-import ItemsTransaction from "./ItemsTransaction";
 import qr from "../../assets/img/qr.png";
 import logo from "../../assets/img/waysbuck_logo.png";
-import { Badge } from "react-bootstrap";
+import ItemsTransaction from "./ItemsTransaction";
 export default function Transaction() {
   return (
     <div className="col-sm-7">
