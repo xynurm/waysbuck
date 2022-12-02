@@ -19,7 +19,7 @@ export default function Header() {
             className="justify-content-end"
           >
             <Nav>
-              <Auth />
+          <Auth/>
             </Nav>
           </Navbar.Collapse>
         </Container>

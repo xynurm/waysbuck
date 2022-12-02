@@ -15,27 +15,33 @@ const Text ={
 }
 
 
-export default function ReviewOrder() {
+export default function ReviewOrder({item}) {
+
+  const numbering = new Intl.NumberFormat('id')
+
   return (
     <div className="d-flex justify-content-between my-4">
     <Row>
       <Col sm={3}>
         <div className="d-flex">
-          <img width={100} className="rounded-3" src={prod1} />
+          <img width={100} className="rounded-3" src={item.product.image} />
         </div>
       </Col>
       <Col>
-        <div className="my-4">
-          <p className="fw-bold" style={Text.Red}>Ice Coffe Palm Sugar</p>
+        <div className="my-4 mx-4">
+          <p className="fw-bold" style={Text.Red}>{item.product.title}</p>
           <p className="fw-semibold" style={Text.Red}>
             {" "}
-            <span style={Text.Brown}>Toping :</span> Bill Berry Boba, Buble Tea Gelatin
+            <span style={Text.Brown}>Toping :</span> {item.toping?.map((element) => (
+              element.title   
+            ))}
+        
           </p>
         </div>
       </Col>
     </Row>
     <div className="my-4">
-      <p style={Text.Red}>Rp.33.000</p>
+      <p style={Text.Red}>Rp.{numbering.format(item.sub_amount)}</p>
       <div className="float-end">
       <img src={trash}/>
       </div>

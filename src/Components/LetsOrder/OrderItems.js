@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function OrderItems({item}) {
   const navigate = useNavigate();
- 
+  const numbering = new Intl.NumberFormat('id')
   return (
     <Col sm={3}>
       <Card
@@ -25,7 +25,7 @@ export default function OrderItems({item}) {
             {item.title}
           </Card.Title>
           <Card.Text className="fw-light" style={{ color: "#974A4A" }}>
-            {item.price.toLocaleString('id', { style: 'currency', currency: 'IDR' })}
+            Rp.{numbering.format(item.price)}
           </Card.Text>
         </Card.Body>
       </Card>

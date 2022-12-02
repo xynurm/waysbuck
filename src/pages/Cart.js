@@ -1,8 +1,9 @@
 import React from "react";
-import { Col, Container, Form, Row,Button } from "react-bootstrap";
-import prod1 from "../assets/img/prod1.png";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { useQuery } from "react-query";
 import btnUpload from "../assets/img/btn_upload.png";
 import ReviewOrder from "../Components/Cart/ReviewOrder";
+import { API } from "../config/api";
 
 const Text = {
   Red: {
@@ -31,14 +32,30 @@ const Input = {
   borderRadius: "5px"
 };
 
-const  CustomBtn = {
+const CustomBtn = {
   backgroundColor: "#BD0707",
   height: "40px",
-  fontSize:"18px",
-  border:"none"
-}
+  fontSize: "18px",
+  border: "none"
+};
 
 export default function Cart() {
+  // const navigate = useNavigate();
+  // const [state] = useContext(UserContext);
+
+  // get data cart
+  const { data: orders } = useQuery("cartsCache", async () => {
+    const response = await API.get("/orders");
+    return response.data.data;
+  });
+
+   
+  let resultTotal = orders?.reduce((accum, item) => {
+    return accum + item.sub_amount;
+  }, 0);
+
+  const numbering = new Intl.NumberFormat('id')
+
   return (
     <Container>
       <div className="px-5">
@@ -50,13 +67,14 @@ export default function Cart() {
               </h4>
             </div>
             <div style={Text.Red}>
-              <p className="fw-semibold" >Review Your Order</p>
+              <p className="fw-semibold">Review Your Order</p>
 
               <hr style={Hr.Brown} />
             </div>
             {/* Review Order */}
-            <ReviewOrder />
-            <ReviewOrder />
+            {orders?.map((item, index) => (
+              <ReviewOrder item={item} key={index} />
+            ))}
             <hr style={Hr.Brown} />
             <Row>
               <Col sm={7}>
@@ -68,8 +86,8 @@ export default function Cart() {
                       <p style={Text.Red}>Qty</p>
                     </div>
                     <div className="text-end">
-                      <p style={Text.Red}>69.000</p>
-                      <p style={Text.Red}>2</p>
+                      <p style={Text.Red}>{numbering.format(resultTotal)}</p>
+                      { (orders?.length >= 1) && <p style={Text.Red}>{orders?.length}</p> }
                     </div>
                   </div>
                   <hr style={Hr.Brown} />
@@ -79,7 +97,7 @@ export default function Cart() {
                     <text style={Text.Red}>Total</text>
                   </div>
                   <div className="fw-bold text-end">
-                    <p style={Text.Red}>69.000</p>
+                    <p style={Text.Red}>{numbering.format(resultTotal)}</p>
                   </div>
                 </div>
               </Col>
@@ -130,15 +148,16 @@ export default function Cart() {
                   className="form-control"
                   placeholder="Pos Code"
                   type="text"
-                  style={{ height: "150px",  border: "2px solid #BD0707", backgroundColor: "rgba(224, 200, 200, 0.25)",
-                  borderRadius: "5px" }}
+                  style={{
+                    height: "150px",
+                    border: "2px solid #BD0707",
+                    backgroundColor: "rgba(224, 200, 200, 0.25)",
+                    borderRadius: "5px"
+                  }}
                 />
               </Form.Group>
               <div className="d-grid gap-2 mb-3">
-                <Button
-                  style={CustomBtn}
-                  className="fw-semibold"
-                >
+                <Button style={CustomBtn} className="fw-semibold">
                   Pay
                 </Button>
               </div>

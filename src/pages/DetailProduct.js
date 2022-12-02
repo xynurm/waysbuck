@@ -1,30 +1,40 @@
-import React, { useState } from "react";
-import { Alert, Button, Col, Container, Row } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Components/DetailProduct/DetailProduct.Module.css";
 import { API } from "../config/api";
+import { UserContext } from "../context/userContext";
 
 export default function DetailProduct() {
+  const navigate = useNavigate();
+  const [state] = useContext(UserContext);
   let { id } = useParams();
 
-  const [toping, setToping] = useState([]); 
-  const [topPrice, setTopPrice] = useState([]); 
-  function handleBadge(id, price) {
-    let idNow = topings.filter((e) => e === id);
-    
-    if (idNow !== id) {
-      setToping([...toping, id]);
-      setTopPrice(Number(topPrice) + Number(price));
-      console.log("toping id", setToping)
-    } else {
-      setToping(topings.filter((e) => e !== id));
-      setTopPrice(Number(topPrice) - Number(price));
-    }
-    
-  }
+  // set toping and toping id
+  const [toping, setToping] = useState([]);
+  const [topingID, setTopingID] = useState([]);
 
- 
+  // make handle toping
+  const handleChangeToping = (e) => {
+    let updateToping = [...toping];
+    if (e.target.checked) {
+      updateToping = [...toping, e.target.value];
+    } else {
+      updateToping.splice(toping.indexOf(e.target.value));
+    }
+    setToping(updateToping);
+
+    let topingId = [...topingID];
+    if (e.target.checked) {
+      topingId = [...topingID, parseInt(e.target.name)];
+    } else {
+      topingId.splice(topingID.indexOf(e.target.name));
+    }
+    setTopingID(topingId);
+  };
+
+  console.log("id toping :", topingID);
 
   let { data: product } = useQuery("productCache", async () => {
     const response = await API.get("/product/" + id);
@@ -37,38 +47,47 @@ export default function DetailProduct() {
     // console.log("toping", response.data.data);
     return response.data.data;
   });
-  let TotalHarga = product?.price + topPrice;
 
-  const [form, setForm] = useState({
-    fullName: '',
-    email: '',
-    password: '',
+  let { refetch } = useQuery("ordersCache", async () => {
+    const response = await API.get("/orders");
+    return response.data.data;
   });
+
+  // calculate price in array toping
+  let topingTotal = toping.reduce((a, b) => {
+    return a + parseInt(b);
+  }, 0);
+
+  // calculate product price and toping
+  let sub_amount = product?.price + topingTotal;
 
   const handleSubmit = useMutation(async (e) => {
     try {
-      e.preventDefault()
+      const body = JSON.stringify({
+        toping_id: topingID,
+        sub_amount: sub_amount,
+        product_id: parseInt(id)
+      });
 
-      const response = await API.post('/order/{id}', form)
-
-      const alert = (<Alert variant='success' className='py-1'>
-        Success
-      </Alert>)
-
-      console.log("Cart :", response.data.data)
-
+      await API.post("/order", body);
+      refetch();
+    
     } catch (err) {
-      const alert = (<Alert variant='danger' className='py-1'>
-        Failed
-      </Alert>)
-      console.log(err)
+      console.log(err);
     }
-  })
+  });
+
+  useEffect(() => {
+    if (state.isLogin === false || state.user.role === "admin") {
+      navigate("/");
+    }
+  }, [state]);
+
+  const numbering = new Intl.NumberFormat('id')
 
   return (
-
-    <Container>
-      <div className="row ms-3 ">
+    <Container className="pb-5">
+      <div className="row ms-3  ">
         <div className="col-sm-6">
           <img
             src={product?.image}
@@ -83,28 +102,27 @@ export default function DetailProduct() {
             {product?.title}
           </h1>
           <p className="fs-4 pb-5" style={{ color: "#974A4A" }}>
-            {product?.price.toLocaleString("id", {
-              style: "currency",
-              currency: "IDR"
-            })}
+            Rp.{numbering.format(product?.price)}
           </p>
           {/* toping */}
           <div className="" style={{ color: "#974A4A" }}>
             <h4 className="pb-5">Toping</h4>
             <Row className="row-cols-4">
-              {topings?.map((item) => (
+              {topings?.map((item, index) => (
                 <Col className="px-1">
                   <div
                     className="card align-items-center "
                     style={{ width: "125px", border: "none" }}
                   >
-                    <input  onClick={() => handleBadge(item.id, item.price)}
+                    <input
                       type="checkbox"
-                      name={item.title}
-                      id={item.id}
+                      name={item.id}
+                      id={index}
+                      value={item.price}
                       className={styles}
+                      onChange={handleChangeToping}
                     />
-                    <label htmlFor={item.id}>
+                    <label htmlFor={index}>
                       <img
                         src={item.image}
                         className="card-img-top mb-2"
@@ -135,7 +153,9 @@ export default function DetailProduct() {
               <h4>Total</h4>
             </div>
             <div>
-              <h4 name="total">{TotalHarga} </h4>
+              <h4>
+                Rp.{numbering.format(sub_amount)}
+              </h4>
             </div>
           </div>
           <div className="col-sm-12">
@@ -144,6 +164,7 @@ export default function DetailProduct() {
                 variant="danger"
                 className="fw-semibold"
                 style={{ backgroundColor: "#BD0707" }}
+                onClick={(e) => handleSubmit.mutate(e)}
               >
                 Add Cart
               </Button>
