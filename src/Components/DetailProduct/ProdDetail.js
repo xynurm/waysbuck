@@ -5,8 +5,6 @@ import Toping from "./Toping";
 
 export default function ProdDetail(props) {
   
-  
- 
   return (
     <div className="row ms-3 ">
       <div className="col-sm-6">

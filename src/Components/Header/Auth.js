@@ -1,123 +1,17 @@
-import React, { useState } from "react";
-import { Form, Modal, Nav, NavDropdown } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react";
+import { Nav, NavDropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import cart from "../../assets/img/cart.png";
 import profile from "../../assets/img/profile.png";
-import BtnAuth from "./BtnAuth";
+import { API,setAuthToken } from "../../config/api";
+import { UserContext } from "../../context/userContext";
 import BtnModal from "./BtnModal";
-import FooterText from "./FooterText";
-import FormGroupAuth from "./FormGroupAuth";
+import Login from "./Login";
+import Register from "./Register";
 
-const Styles = {
-  Title: {
-    color: "#BD0707"
-  },
-  Input: {
-    border: "2px solid #BD0707",
-    height: "50px",
-    backgroundColor: "rgba(224, 200, 200, 0.25)"
-  },
-  CustomBtn: {
-    backgroundColor: "#BD0707",
-    height: "50px",
-    fontSize: "18px"
-  }
-};
-
-export default function Auth(props) {
+export default function Auth() {
   const navigate = useNavigate()
 
-  const users = [];
-
-  const [user, setUser] = useState({
-    id: 0,
-    email: "",
-    password: "",
-    fullname: "",
-    role: "user"
-  });
-
-  const createUser = () => {
-    let dataUser = JSON.parse(localStorage.getItem("DATA_USERS"))
-    if (dataUser !== null){
-      dataUser.forEach(element => {
-        users.push(element)
-      })
-      users.push(user)
-      localStorage.setItem("DATA_USERS", JSON.stringify(users))
-    }else{
-      users.push(user)
-      localStorage.setItem("DATA_USERS", JSON.stringify(users))
-    }
-  };
-
-  const handleOnChangeRegister = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleOnSubmitRegister = (e) => {
-    e.preventDefault();
-    createUser();
-  };
-
-  
-  const [login, setLogin] = useState({
-    email: "",
-    password: "",
-    fullname:""
-  });
-
-
-
-  const getUser = () => {
-    let storage= JSON.parse(localStorage.getItem("DATA_USERS"));
-    storage.forEach((element) => {
-      if (
-        login.email === element.email &&
-        login.password === element.password 
-       
-      ) {
-       
-        users.push(login)
-       
-
-        localStorage.setItem("login", JSON.stringify(users));
-        handleCloseLogin()
-      } else {
-        return alert("wrong password");
-      }
-    });
-  };
-
-  const dataLogin = JSON.parse(localStorage.getItem("login"));
-  let getLogin = [...dataLogin];
-  
-
-
-  const handleOnChangeLogin = (e) => {
-    let storage= JSON.parse(localStorage.getItem("DATA_USERS"));
-    setLogin({
-      ...login,
-      [e.target.name]: e.target.value,
-      fullname: storage[0].fullname,
-    });
-  };
-
-  const handleOnSubmitLogin = (e) => {
-    e.preventDefault();
-    getUser();
-    
-  };
-
-  const Logout = () => {
-    navigate("/")
-    getLogin.pop()
-
-    localStorage.setItem("login", JSON.stringify(getLogin));
-  };
 
   const [showlogin, setShowLogin] = useState(false);
   const handleCloseLogin = () => setShowLogin(false);
@@ -137,10 +31,60 @@ export default function Auth(props) {
     setShowRegister(false);
   };
 
+  const [state, dispatch] = useContext(UserContext);
+
+
+  useEffect(() => {
+    // Redirect Auth
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+
+  }, [state]);
+
+  const checkUser = async () => {
+    try {
+      const response = await API.get('/check-auth');
+
+      // If the token incorrect
+      if (response.status === 404) {
+        return dispatch({
+          type: 'AUTH_ERROR',
+        });
+      }
+
+      console.log("response check auth", response)
+
+      // Get user data
+      let payload = response.data.data;
+
+      if (payload.role === "admin"){
+        navigate("/admin")
+      }
+      // Get token from local storage
+      payload.token = localStorage.token;
+
+      // Send data to useContext
+      dispatch({
+        type: 'USER_SUCCESS',
+        payload,
+      });
+      console.log("ini data state", state)
+     
+    } catch (error) {
+      console.log(error);
+     
+    }
+  };
+
+  useEffect(() => {
+    checkUser();
+  }, []);
+
  
+  
 
-
-  if (getLogin.length !==0 ) {
+  if (state.isLogin) {
     return (
       <>
         <Nav.Link className="pt-4 px-4">
@@ -153,7 +97,7 @@ export default function Auth(props) {
                 Profile
               </Link>
             </NavDropdown.Item>
-            <NavDropdown.Item className="fw-bold" onClick={Logout}>
+            <NavDropdown.Item className="fw-bold" >
               Logout
             </NavDropdown.Item>
           </NavDropdown>
@@ -165,43 +109,14 @@ export default function Auth(props) {
   return (
       <>
         {/* Login */}
-      
         <Nav.Link>
           <BtnModal
             name="Login"
             variant="outline-danger"
             onClick={handleShowLogin}
           />
-  
-          <Modal show={showlogin} onHide={handleCloseLogin} centered>
-            <Modal.Body>
-              <Modal.Title className="mb-4 fs-2 fw-bold" style={Styles.Title}>
-                Login
-              </Modal.Title>
-              <Form>
-                <FormGroupAuth
-                  type="email"
-                  name="email"
-                  placeholder="email"
-                  onChange={handleOnChangeLogin}
-                />
-                <FormGroupAuth
-                  type="password"
-                  name="password"
-                  placeholder="password"
-                  onChange={handleOnChangeLogin}
-                />
-                <BtnAuth
-                  variant="danger"
-                  name="Login"
-                  onClick={handleOnSubmitLogin}
-                />
-                <FooterText title="Don't have account?" click={linkRegister} />
-              </Form>
-            </Modal.Body>
-          </Modal>
         </Nav.Link>
-  
+       <Login showlogin={showlogin} handleCloseLogin={handleCloseLogin} linkRegister={linkRegister}/>
         {/* register */}
   
         <Nav.Link>
@@ -211,40 +126,8 @@ export default function Auth(props) {
             style={{ backgroundColor: "#BD0707" }}
             onClick={handleShowRegister}
           />
-          <Modal show={showregister} onHide={handleCloseRegister} centered>
-            <Modal.Body>
-              <Modal.Title className="mb-4 fs-2 fw-bold" style={Styles.Title}>
-                Register
-              </Modal.Title>
-              <Form onSubmit={handleOnSubmitRegister}>
-                <FormGroupAuth
-                  type="email"
-                  name="email"
-                  placeholder="email"
-                  onChange={handleOnChangeRegister}
-                />
-                <FormGroupAuth
-                  type="password"
-                  name="password"
-                  placeholder="password"
-                  onChange={handleOnChangeRegister}
-                />
-                <FormGroupAuth
-                  type="text"
-                  name="fullname"
-                  placeholder="Full Name"
-                  onChange={handleOnChangeRegister}
-                />
-                <BtnAuth
-                  variant="danger"
-                  name="Register"
-                  onClick={handleOnSubmitRegister}
-                />
-                <FooterText title="Don't have account?" click={linkLogin} />
-              </Form>
-            </Modal.Body>
-          </Modal>
         </Nav.Link>
+        <Register showregister={showregister} handleCloseRegister={handleCloseRegister} linkLogin={linkLogin} />
       </>
     );
   }

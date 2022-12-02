@@ -1,12 +1,17 @@
 import React from "react";
 import { Container, Row } from "react-bootstrap";
 import OrderItems from "./OrderItems";
-// import ProductList from "./ProductList";
+import { useQuery } from 'react-query';
+import { API } from "../../config/api";
 
 
 export default function LetsOrder() {
 
-  const ProductList =JSON.parse(localStorage.getItem("DATA_PRODUCT"))
+  let { data: products } = useQuery("productsCache", async () => {
+    const response = await API.get('/products')
+    console.log("berhasil ambil data", response.data.data)
+    return response.data.data
+  })
   
   return (
     <Container className="mt-4 ">
@@ -18,15 +23,13 @@ export default function LetsOrder() {
       <div className="">
         <Row>
         
-          {ProductList.map((item,index)=> (
+          {products?.map((item,index)=> (
           
              <OrderItems
              
              key={index}
-             name={item.name}
-             price={item.price.toLocaleString('id', { style: 'currency', currency: 'IDR' })}
-             img={item.img}
-            id={index}
+             item={item}
+
            />
           ) )}
       

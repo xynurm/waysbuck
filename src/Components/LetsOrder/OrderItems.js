@@ -2,23 +2,15 @@ import React from "react";
 import { Card, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-export default function OrderItems(props) {
+export default function OrderItems({item}) {
   const navigate = useNavigate();
-  // const getLogin = JSON.parse(localStorage.getItem("login"));
-  // let redirect = null;
-  // if (getLogin.length !== 0) {
-  //   redirect = () => {
-  //     navigate(`/detail/${props.id}`);
-  //   };
-  // } else {
-  //   //
-  // }
+ 
   return (
     <Col sm={3}>
       <Card
         className="mb-4"
         onClick={() => {
-          navigate(`/detail/${props.id}`);
+          navigate(`/product/`+ item.id);
         }}
         style={{
           width: "241px",
@@ -27,13 +19,13 @@ export default function OrderItems(props) {
           borderRadius: "10px"
         }}
       >
-        <Card.Img src={props.img} />
+        <Card.Img src={item.image} />
         <Card.Body>
           <Card.Title className="fw-bold " style={{ color: "#BD0707" }}>
-            {props.name}
+            {item.title}
           </Card.Title>
           <Card.Text className="fw-light" style={{ color: "#974A4A" }}>
-            {props.price}
+            {item.price.toLocaleString('id', { style: 'currency', currency: 'IDR' })}
           </Card.Text>
         </Card.Body>
       </Card>
