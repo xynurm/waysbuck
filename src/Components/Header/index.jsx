@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Image, Nav, Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/img/waysbuck_logo.png";
-import Auth from "./Auth";
+import Auth from "../Auth";
 export default function Header() {
   return (
     <>
@@ -19,7 +19,7 @@ export default function Header() {
             className="justify-content-end"
           >
             <Nav>
-          <Auth/>
+              <Auth />
             </Nav>
           </Navbar.Collapse>
         </Container>

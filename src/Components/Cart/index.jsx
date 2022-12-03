@@ -1,7 +1,6 @@
 import React from "react";
-import {Row, Col} from "react-bootstrap";
-import prod1 from "../../assets/img/prod1.png";
-import trash from "../../assets/img/trash.png"
+import { Col, Row } from "react-bootstrap";
+import trash from "../../assets/img/trash.png";
 
 
 const Text ={
@@ -24,7 +23,7 @@ export default function ReviewOrder({item}) {
     <Row>
       <Col sm={3}>
         <div className="d-flex">
-          <img width={100} className="rounded-3" src={item.product.image} />
+          <img width={100} className="rounded-3" src={item.product.image} alt="cart-product"/>
         </div>
       </Col>
       <Col>
@@ -43,7 +42,7 @@ export default function ReviewOrder({item}) {
     <div className="my-4">
       <p style={Text.Red}>Rp.{numbering.format(item.sub_amount)}</p>
       <div className="float-end">
-      <img src={trash}/>
+      <img src={trash} alt="trash"/>
       </div>
     </div>
   </div>

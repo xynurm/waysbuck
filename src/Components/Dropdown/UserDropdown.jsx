@@ -1,5 +1,5 @@
 import React from "react";
-import { Nav, NavDropdown } from "react-bootstrap";
+import { Badge, Nav, NavDropdown } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import cart from "../../assets/img/cart.png";
@@ -11,13 +11,14 @@ export default function UserDropdown({logOut}) {
     const response = await API.get("/orders");
     return response.data.data;
   });
+  
 
   return (
     <>
       <Nav.Link className="pt-4 px-4">
       <Link to="/cart" className="text-decoration-none text-dark">
         <img src={cart} alt="" />
-        { (orders?.length >= 1) && <span>{orders?.length}</span> }
+        { (orders?.length >= 1) &&  <Badge bg="danger">{orders?.length}</Badge>}
         </Link>
       </Nav.Link>
       <Nav.Link align="center">

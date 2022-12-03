@@ -1,12 +1,11 @@
 import React from "react";
 import { Nav, NavDropdown } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import profile from "../../assets/img/profile.png";
 export default function AdminDropdown({ logOut }) {
-  const navigate = useNavigate();
   return (
     <Nav.Link align="center">
-      <NavDropdown title={<img src={profile} alt="" />} id="basic-nav-dropdown">
+      <NavDropdown title={<img src={profile} alt="profile" />} id="basic-nav-dropdown">
         <NavDropdown.Item className="fw-bold">
           <Link to="/add-product" className="text-decoration-none text-dark">
             Add Product

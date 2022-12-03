@@ -6,7 +6,7 @@ export default function Heroes() {
   return (
     <Container >
       <div className="position-relative">
-        <img src={frame} className="img-fluid"></img>
+        <img src={frame} className="img-fluid" alt="heroes-img"></img>
         <div className="position-absolute top-0  p-5 text-white">
           <h1 className="fw-bold px-4">WAYSBUCK</h1>
           <p className="fw-light px-4"  style={{ fontSize:"24px" }}>

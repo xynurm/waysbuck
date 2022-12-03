@@ -1,15 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
-import Header from "./Components/Header";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "./context/userContext";
-import { API, setAuthToken } from "./config/api";
 import {
   BrowserRouter as Router,
   Route,
-  Routes,
-  useNavigate
+  Routes
 } from "react-router-dom";
+import "./App.css";
+import Header from "./Components/Header";
 import AddProduct from "./pages/AddProduct";
 import AddToping from "./pages/AddToping";
 import Cart from "./pages/Cart";

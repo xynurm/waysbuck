@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Button, Container, Modal, ModalBody, Table } from "react-bootstrap";
+import { Button, Container, Modal, Table } from "react-bootstrap";
+import btnCancel from "../assets/img/cancel.png";
 import btnCheck from "../assets/img/check.png";
-import ItemsTransaction from "../Components/Profile/ItemsTransaction";
 import qr from "../assets/img/qr.png";
 import logo from "../assets/img/waysbuck_logo.png";
-import btnCancel from "../assets/img/cancel.png";
+import ItemsTransaction from "../Components/Profile/ItemsTransaction";
 export default function IncomeTransaction() {
   const [showDetail, setShowDetail] = useState(false);
   const handleCloseDetail = () => setShowDetail(false);
@@ -86,10 +86,10 @@ export default function IncomeTransaction() {
             <div className="col-sm-3 ">
               <div align="center">
                 <div className="mb-3">
-                  <img src={logo} width={70} />
+                  <img src={logo} width={70} alt="logo"/>
                 </div>
                 <div className="mb-3">
-                  <img src={qr} width={90} />
+                  <img src={qr} width={90} alt="qr"/>
                 </div>
                 <div
                   style={{ backgroundColor: "#E6FBFF", borderRadius: "5px" }}

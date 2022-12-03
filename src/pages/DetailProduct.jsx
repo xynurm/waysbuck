@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Container, Row } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import styles from "../Components/DetailProduct/DetailProduct.Module.css";
+import TopingItem from "../Components/Toping";
 import { API } from "../config/api";
 import { UserContext } from "../context/userContext";
 
@@ -81,6 +81,7 @@ export default function DetailProduct() {
     if (state.isLogin === false || state.user.role === "admin") {
       navigate("/");
     }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   const numbering = new Intl.NumberFormat('id')
@@ -109,39 +110,7 @@ export default function DetailProduct() {
             <h4 className="pb-5">Toping</h4>
             <Row className="row-cols-4">
               {topings?.map((item, index) => (
-                <Col className="px-1">
-                  <div
-                    className="card align-items-center "
-                    style={{ width: "125px", border: "none" }}
-                  >
-                    <input
-                      type="checkbox"
-                      name={item.id}
-                      id={index}
-                      value={item.price}
-                      className={styles}
-                      onChange={handleChangeToping}
-                    />
-                    <label htmlFor={index}>
-                      <img
-                        src={item.image}
-                        className="card-img-top mb-2"
-                        style={{ width: "75px" }}
-                        alt=""
-                      />
-                    </label>
-
-                    <p
-                      style={{
-                        color: "#BD0707",
-                        fontSize: "14px",
-                        textAlign: "center"
-                      }}
-                    >
-                      {item.title}
-                    </p>
-                  </div>
-                </Col>
+                <TopingItem item={item} index={index} handleChangeToping={handleChangeToping} />
               ))}
             </Row>
           </div>

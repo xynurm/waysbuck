@@ -18,10 +18,10 @@ export default function Transaction() {
             <div className="col-sm-3 ">
               <div align="center">
                 <div className="mb-3">
-                <img src={logo} width={70} />
+                <img src={logo} width={70} alt="logo"/>
                 </div>
                 <div className="mb-3">
-                  <img src={qr} width={90} />
+                  <img src={qr} width={90} alt="qr" />
                 </div>
                <div style={{ backgroundColor:"#E6FBFF", borderRadius:"5px", }}>
                 <p className="fw-semibold" style={{ color:"#00D1FF", fontSize:"14px" }}>On The Way</p>

@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { API, setAuthToken } from "../../config/api";
+import { API } from "../../config/api";
 import { UserContext } from "../../context/userContext";
-import BtnAuth from "./BtnAuth";
-import FooterText from "./FooterText";
-import FormGroupAuth from "./FormGroupAuth";
+import BtnAuth from "./molecules/BtnAuth";
+import FooterText from "./molecules/FooterText";
+import FormGroupAuth from "./molecules/FormGroupAuth";
 const Styles = {
   Title: {
     color: "#BD0707"
@@ -24,8 +23,6 @@ const Styles = {
 };
 
 export default function Login({ showlogin, handleCloseLogin, linkRegister }) {
-  let navigate = useNavigate();
-
   const [state, dispatch] = useContext(UserContext);
 
   const [form, setForm] = useState({
@@ -51,9 +48,11 @@ export default function Login({ showlogin, handleCloseLogin, linkRegister }) {
       });
       window.location.reload()
       handleCloseLogin()
+      alert("login success")
     } catch (err) {
       console.log(err);
       handleCloseLogin()
+      alert("login failed")
     }
   });
   

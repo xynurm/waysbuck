@@ -5,7 +5,7 @@ import { API, setAuthToken } from "../../config/api";
 import { UserContext } from "../../context/userContext";
 import AdminDropdown from "../Dropdown/AdminDropdown.jsx";
 import UserDropdown from "../Dropdown/UserDropdown";
-import BtnModal from "./BtnModal";
+import BtnModal from "./molecules/BtnModal";
 import Login from "./Login";
 import Register from "./Register";
 export default function Auth() {
@@ -40,6 +40,7 @@ export default function Auth() {
     } else {
       navigate("/");
     }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   const checkUser = async () => {
@@ -69,6 +70,7 @@ export default function Auth() {
   };
   useEffect(() => {
     checkUser();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logOut = () => {

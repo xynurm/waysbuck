@@ -1,15 +1,13 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import {
-  Col,
+  Button, Col,
   Container,
   FormControl,
   FormGroup,
-  Row,
-  Button
+  Row
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-import addProd from "../assets/img/addProd.png";
 const Text = {
   Red: {
     color: "#BD0707"

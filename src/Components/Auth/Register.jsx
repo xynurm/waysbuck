@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
-import { Modal, Form, Alert } from "react-bootstrap";
-import FormGroupAuth from "./FormGroupAuth";
-import BtnAuth from "./BtnAuth";
-import FooterText from "./FooterText";
+import React, { useContext, useState } from "react";
+import { Form, Modal } from "react-bootstrap";
+import { useMutation } from "react-query";
 import { API } from "../../config/api";
-import {UserContext} from "../../context/userContext"
-import { useMutation } from 'react-query';
+import { UserContext } from "../../context/userContext";
+import BtnAuth from "./molecules/BtnAuth";
+import FooterText from "./molecules/FooterText";
+import FormGroupAuth from "./molecules/FormGroupAuth";
 
 const Styles = {
   Title: {
@@ -28,47 +28,32 @@ export default function Register({
   handleCloseRegister,
   linkLogin
 }) {
-
   const [state, dispatch] = useContext(UserContext);
 
   const [form, setForm] = useState({
-    fullName: '',
-    email: '',
-    password: '',
+    fullName: "",
+    email: "",
+    password: ""
   });
-
-  const [message, setMessage] = useState(null);
-
-
 
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
   const handleSubmit = useMutation(async (e) => {
     try {
-      e.preventDefault()
-
-      const response = await API.post('/register', form)
-
-      const alert = (<Alert variant='success' className='py-1'>
-        Success
-      </Alert>)
-      setMessage(alert)
-      console.log("user Register :", response.data.data)
-      handleCloseRegister()
+      e.preventDefault();
+      await API.post("/register", form);
+      handleCloseRegister();
+      alert("berhasil daftar");
     } catch (err) {
-      const alert = (<Alert variant='danger' className='py-1'>
-        Failed
-      </Alert>)
-      setMessage(alert)
-      console.log(err)
-      handleCloseRegister()
+      console.log(err);
+      handleCloseRegister();
     }
-  })
+  });
   return (
     <Modal show={showregister} onHide={handleCloseRegister} centered>
       <Modal.Body>

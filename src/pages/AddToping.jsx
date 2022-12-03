@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import {
-  Col,
+  Button, Col,
   Container,
   FormControl,
   FormGroup,
-  Row,
-  Button
+  Row
 } from "react-bootstrap";
-import upload from "../assets/img/upload.png";
-import addTop from "../assets/img/addTop.png";
-import { useNavigate } from "react-router-dom";
 const Text = {
   Red: {
     color: "#BD0707"
@@ -25,15 +21,6 @@ const Input = {
   height: "50px",
   backgroundColor: "rgba(224, 200, 200, 0.25)",
   borderRadius: "5px"
-};
-
-const Upload = {
-  border: "2px solid #BD0707",
-
-  height: "50px",
-  backgroundColor: "rgba(224, 200, 200, 0.25)",
-  borderRadius: "5px",
-  placeholder: "none"
 };
 
 const CustomBtn = {

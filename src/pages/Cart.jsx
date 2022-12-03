@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useQuery } from "react-query";
 import btnUpload from "../assets/img/btn_upload.png";
-import ReviewOrder from "../Components/Cart/ReviewOrder";
+import ReviewOrder from "../Components/Cart";
 import { API } from "../config/api";
 
 const Text = {
@@ -111,7 +111,7 @@ export default function Cart() {
                   />
                   <label for="upload">
                     {" "}
-                    <img src={btnUpload} />
+                    <img src={btnUpload} alt="btn-upload"/>
                   </label>
                 </Form.Group>
               </Col>

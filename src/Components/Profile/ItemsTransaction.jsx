@@ -5,7 +5,7 @@ export default function ItemsTransaction() {
   return (
     <div className="d-flex ">
       <div>
-        <img src={prod1} className="rounded-3" width={100} />
+        <img src={prod1} className="rounded-3" width={100} alt="prod-item"/>
       </div>
       <div className="px-3">
         <div className="mb-3">
