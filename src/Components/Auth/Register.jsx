@@ -52,6 +52,7 @@ export default function Register({
     } catch (err) {
       console.log(err);
       handleCloseRegister();
+      alert("gagal daftar")
     }
   });
   return (
