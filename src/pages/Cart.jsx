@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { useState } from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import btnUpload from "../assets/img/btn_upload.png";
 import ReviewOrder from "../Components/Cart";
 import { API } from "../config/api";
@@ -49,6 +49,7 @@ export default function Cart() {
     const response = await API.get("/orders");
     return response.data.data;
   });
+  let navigate = useNavigate();
 
   const [state, dispatch] = useContext(UserContext);
 
@@ -68,23 +69,21 @@ export default function Cart() {
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name] : e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
   let { data: profile } = useQuery("profileCache", async () => {
     try {
       const response = await API.get("/profiles");
-      console.log("data profile", response.data.data);
       return response.data.data;
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   });
 
   let { data: user } = useQuery("userCache", async () => {
-    const response = await API.get("/user/"+ state.user.id);
-    console.log("data profile", response.data.data);
+    const response = await API.get("/user/" + state.user.id);
     return response.data.data;
   });
 
@@ -101,17 +100,59 @@ export default function Cart() {
 
   const handleSubmit = useMutation(async (e) => {
     try {
-      
       const formData = new FormData();
       formData.set("phone", form.phone);
       formData.set("pos_code", form.pos_code);
       formData.set("address", form.address);
-       await API.post("/profile", formData);
+      await API.post("/profile", formData);
+      alert("berhasil add cart");
+
+      const response = await API.post("/transaction");
+      const token = response.data.token;
+      window.snap.pay(token, {
+        onSuccess: function (result) {
+          /* You may add your own implementation here */
+          console.log(result);
+          navigate("/profile");
+        },
+        onPending: function (result) {
+          /* You may add your own implementation here */
+          console.log(result);
+          navigate("/profile");
+        },
+        onError: function (result) {
+          /* You may add your own implementation here */
+          console.log(result);
+        },
+        onClose: function () {
+          /* You may add your own implementation here */
+          alert("you closed the popup without finishing the payment");
+        }
+      });
     } catch (err) {
       console.log(err);
       alert("error profile");
     }
   });
+
+  useEffect(() => {
+    //change this to the script source you want to load, for example this is snap.js sandbox env
+    const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+    //change this according to your client-key
+    const myMidtransClientKey = "Client key here ...";
+
+    let scriptTag = document.createElement("script");
+    scriptTag.src = midtransScriptUrl;
+    // optional if you want to set script attribute
+    // for example snap.js have data-client-key attribute
+    scriptTag.setAttribute("data-client-key", myMidtransClientKey);
+
+    document.body.appendChild(scriptTag);
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
+  }, []);
+
   return (
     <>
       {isLoading ? (
@@ -191,7 +232,8 @@ export default function Cart() {
                   <Form.Group className="mb-4">
                     <input
                       className="form-control"
-                      placeholder={user?.fullName}
+                      placeholder="Full Name"
+                      value={user?.fullName}
                       type="text"
                       style={Input}
                       disabled
@@ -200,7 +242,8 @@ export default function Cart() {
                   <Form.Group className="mb-4">
                     <input
                       className="form-control"
-                      placeholder={user?.email}
+                      placeholder="Email"
+                      value={user?.email}
                       type="text"
                       style={Input}
                       disabled
