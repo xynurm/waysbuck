@@ -1,9 +1,14 @@
 import React from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { useQuery } from "react-query";
+import { useEffect } from "react";
+import { useContext } from "react";
+import { useState } from "react";
+import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import { useMutation, useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
 import btnUpload from "../assets/img/btn_upload.png";
 import ReviewOrder from "../Components/Cart";
 import { API } from "../config/api";
+import { UserContext } from "../context/userContext";
 
 const Text = {
   Red: {
@@ -40,131 +45,220 @@ const CustomBtn = {
 };
 
 export default function Cart() {
-  // const navigate = useNavigate();
-  // const [state] = useContext(UserContext);
-
-  // get data cart
-  const { data: orders } = useQuery("cartsCache", async () => {
+  const { data: orders, isLoading } = useQuery("cartsCache", async () => {
     const response = await API.get("/orders");
     return response.data.data;
   });
 
-   
+  const [state, dispatch] = useContext(UserContext);
+
   let resultTotal = orders?.reduce((accum, item) => {
     return accum + item.sub_amount;
   }, 0);
 
-  const numbering = new Intl.NumberFormat('id')
+  const numbering = new Intl.NumberFormat("id");
 
+  const [form, setForm] = useState({
+    user_id: state.user.id,
+    phone: "",
+    pos_code: "",
+    address: ""
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name] : e.target.value,
+    });
+  };
+
+  let { data: profile } = useQuery("profileCache", async () => {
+    try {
+      const response = await API.get("/profiles");
+      console.log("data profile", response.data.data);
+      return response.data.data;
+    } catch (err) {
+      console.log(err)
+    }
+  });
+
+  let { data: user } = useQuery("userCache", async () => {
+    const response = await API.get("/user/"+ state.user.id);
+    console.log("data profile", response.data.data);
+    return response.data.data;
+  });
+
+  useEffect(() => {
+    if (profile) {
+      setForm({
+        ...form,
+        phone: profile.phone,
+        pos_code: profile.pos_code,
+        address: profile.address
+      });
+    }
+  }, [profile]);
+
+  const handleSubmit = useMutation(async (e) => {
+    try {
+      
+      const formData = new FormData();
+      formData.set("phone", form.phone);
+      formData.set("pos_code", form.pos_code);
+      formData.set("address", form.address);
+       await API.post("/profile", formData);
+    } catch (err) {
+      console.log(err);
+      alert("error profile");
+    }
+  });
   return (
-    <Container>
-      <div className="px-5">
-        <Row>
-          <Col sm={7}>
-            <div className="mb-4">
-              <h4 className="fw-bold" style={Text.Red}>
-                My Cart
-              </h4>
-            </div>
-            <div style={Text.Red}>
-              <p className="fw-semibold">Review Your Order</p>
-
-              <hr style={Hr.Brown} />
-            </div>
-            {/* Review Order */}
-            {orders?.map((item, index) => (
-              <ReviewOrder item={item} key={index} />
-            ))}
-            <hr style={Hr.Brown} />
-            <Row>
-              <Col sm={7}>
-                <hr style={Hr.Brown} />
-                <div>
-                  <div className="d-flex justify-content-between">
-                    <div className="">
-                      <p style={Text.Red}>Subtotal</p>
-                      <p style={Text.Red}>Qty</p>
-                    </div>
-                    <div className="text-end">
-                      <p style={Text.Red}>{numbering.format(resultTotal)}</p>
-                      { (orders?.length >= 1) && <p style={Text.Red}>{orders?.length}</p> }
-                    </div>
-                  </div>
-                  <hr style={Hr.Brown} />
-                </div>
-                <div className="d-flex justify-content-between">
-                  <div className="fw-bold">
-                    <text style={Text.Red}>Total</text>
-                  </div>
-                  <div className="fw-bold text-end">
-                    <p style={Text.Red}>{numbering.format(resultTotal)}</p>
-                  </div>
-                </div>
-              </Col>
-              <Col className=" mt-3">
-                <Form.Group className="float-end">
-                  <input
-                    className="form-control"
-                    type="file"
-                    id="upload"
-                    hidden
-                  />
-                  <label for="upload">
-                    {" "}
-                    <img src={btnUpload} alt="btn-upload"/>
-                  </label>
-                </Form.Group>
-              </Col>
-            </Row>
-          </Col>
-          <Col sm={5} className="pt-5 ps-5 justify-content-end">
-            <div className="mt-5">
-              <Form.Group className="mb-4">
-                <input
-                  className="form-control"
-                  placeholder="Name"
-                  type="text"
-                  style={Input}
-                />
-              </Form.Group>
-              <Form.Group className="mb-4">
-                <input
-                  className="form-control"
-                  placeholder="Phone"
-                  type="text"
-                  style={Input}
-                />
-              </Form.Group>
-              <Form.Group className="mb-4">
-                <input
-                  className="form-control"
-                  placeholder="Pos Code"
-                  type="text"
-                  style={Input}
-                />
-              </Form.Group>
-              <Form.Group className="mb-4">
-                <textarea
-                  className="form-control"
-                  placeholder="Pos Code"
-                  type="text"
-                  style={{
-                    height: "150px",
-                    border: "2px solid #BD0707",
-                    backgroundColor: "rgba(224, 200, 200, 0.25)",
-                    borderRadius: "5px"
-                  }}
-                />
-              </Form.Group>
-              <div className="d-grid gap-2 mb-3">
-                <Button style={CustomBtn} className="fw-semibold">
-                  Pay
-                </Button>
+    <>
+      {isLoading ? (
+        <div align="center">
+          <Spinner animation="border" />
+        </div>
+      ) : null}
+      <Container>
+        <div className="px-5">
+          <Row>
+            <Col sm={7}>
+              <div className="mb-4">
+                <h4 className="fw-bold" style={Text.Red}>
+                  My Cart
+                </h4>
               </div>
-            </div>
-          </Col>
-        </Row>
-      </div>
-    </Container>
+              <div style={Text.Red}>
+                <p className="fw-semibold">Review Your Order</p>
+
+                <hr style={Hr.Brown} />
+              </div>
+
+              {/* Review Order */}
+              {orders?.map((item, index) => (
+                <ReviewOrder item={item} key={index} />
+              ))}
+              <hr style={Hr.Brown} />
+              <Row>
+                <Col sm={7}>
+                  <hr style={Hr.Brown} />
+                  <div>
+                    <div className="d-flex justify-content-between">
+                      <div className="">
+                        <p style={Text.Red}>Subtotal</p>
+                        <p style={Text.Red}>Qty</p>
+                      </div>
+                      <div className="text-end">
+                        <p style={Text.Red}>{numbering.format(resultTotal)}</p>
+                        {orders?.length >= 1 && (
+                          <p style={Text.Red}>{orders?.length}</p>
+                        )}
+                      </div>
+                    </div>
+                    <hr style={Hr.Brown} />
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <div className="fw-bold">
+                      <text style={Text.Red}>Total</text>
+                    </div>
+                    <div className="fw-bold text-end">
+                      <p style={Text.Red}>{numbering.format(resultTotal)}</p>
+                    </div>
+                  </div>
+                </Col>
+                <Col className=" mt-3">
+                  <Form.Group className="float-end">
+                    <input
+                      className="form-control"
+                      type="file"
+                      id="upload"
+                      hidden
+                    />
+                    <label for="upload">
+                      {" "}
+                      <img src={btnUpload} alt="btn-upload" />
+                    </label>
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Col>
+            <Col sm={5} className="pt-5 ps-5 justify-content-end">
+              <div className="mt-5">
+                <Form
+                  onSubmit={(e) => handleSubmit.mutate(e)}
+                  encType="multipart/form-data"
+                >
+                  <Form.Group className="mb-4">
+                    <input
+                      className="form-control"
+                      placeholder={user?.fullName}
+                      type="text"
+                      style={Input}
+                      disabled
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-4">
+                    <input
+                      className="form-control"
+                      placeholder={user?.email}
+                      type="text"
+                      style={Input}
+                      disabled
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-4">
+                    <input
+                      className="form-control"
+                      placeholder="Phone"
+                      value={form?.phone}
+                      type="text"
+                      name="phone"
+                      onChange={handleChange}
+                      style={Input}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-4">
+                    <input
+                      className="form-control"
+                      placeholder="Pos Code"
+                      value={form?.pos_code}
+                      type="text"
+                      name="pos_code"
+                      onChange={handleChange}
+                      style={Input}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-4">
+                    <textarea
+                      className="form-control"
+                      placeholder="Address"
+                      value={form?.address}
+                      type="text"
+                      name="address"
+                      onChange={handleChange}
+                      style={{
+                        height: "150px",
+                        border: "2px solid #BD0707",
+                        backgroundColor: "rgba(224, 200, 200, 0.25)",
+                        borderRadius: "5px"
+                      }}
+                    />
+                  </Form.Group>
+                  <div className="d-grid gap-2 mb-3">
+                    <Button
+                      style={CustomBtn}
+                      className="fw-semibold"
+                      onClick={(e) => handleSubmit.mutate(e)}
+                    >
+                      Pay
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </Container>
+    </>
   );
 }

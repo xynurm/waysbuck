@@ -56,12 +56,6 @@ export default function Login({ showlogin, handleCloseLogin, linkRegister }) {
     }
   });
   
- 
-
-
-
- 
-
   return (
     <Modal show={showlogin} onHide={handleCloseLogin} centered>
       <Modal.Body>
