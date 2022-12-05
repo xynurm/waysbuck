@@ -116,7 +116,7 @@ export default function Cart() {
 
       const idTransaction = response.data.data.id;
       for (let i = 0; i < orders.length; i++) {
-        API.patch(`/cart/${orders[i].id}`, { transaction_id: idTransaction });
+        API.patch(`/order/${orders[i].id}`, { transaction_id: idTransaction });
       }
 
       const snapToken = await API.get(`/midtrans/${idTransaction}`);
