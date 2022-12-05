@@ -57,6 +57,7 @@ export default function Cart() {
     return accum + item.sub_amount;
   }, 0);
 
+
   const numbering = new Intl.NumberFormat("id");
 
   const [form, setForm] = useState({
@@ -100,15 +101,31 @@ export default function Cart() {
 
   const handleSubmit = useMutation(async (e) => {
     try {
+
       const formData = new FormData();
       formData.set("phone", form.phone);
       formData.set("pos_code", form.pos_code);
       formData.set("address", form.address);
       await API.post("/profile", formData);
-      alert("berhasil add cart");
 
-      const response = await API.post("/transaction");
-      const token = response.data.token;
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const data = {
+        amount: resultTotal,
+      };
+      const body = JSON.stringify(data)
+      const response = await API.post("/transaction", body, config);
+
+      const idTransaction = response.data.data.id
+      for (let i=0; i<orders.length; i++){
+        API.patch(`/cart/${orders[i].id}`, {"transaction_id": idTransaction} )
+      }
+
+      const snapToken = await API.get(`/midtrans/${idTransaction}`)
+      const token = snapToken.data.data.token;
       window.snap.pay(token, {
         onSuccess: function (result) {
           /* You may add your own implementation here */
@@ -129,9 +146,11 @@ export default function Cart() {
           alert("you closed the popup without finishing the payment");
         }
       });
+
+    
     } catch (err) {
       console.log(err);
-      alert("error profile");
+      
     }
   });
 
@@ -139,8 +158,8 @@ export default function Cart() {
     //change this to the script source you want to load, for example this is snap.js sandbox env
     const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
     //change this according to your client-key
-    const myMidtransClientKey = process.env.REACT_APP_MIDTRANS_CLIENT_KEY;
-
+    // const myMidtransClientKey = process.env.REACT_APP_MIDTRANS_CLIENT_KEY;
+    const myMidtransClientKey = "SB-Mid-client-m9h4S-nw-g1T5Qcy"
     let scriptTag = document.createElement("script");
     scriptTag.src = midtransScriptUrl;
     // optional if you want to set script attribute

@@ -1,16 +1,18 @@
 import React from "react";
-import prod1 from "../../assets/img/prod1.png";
+// import prod1 from "../../assets/img/prod1.png";
 
-export default function ItemsTransaction() {
+export default function ItemsTransaction({item}) {
+  const numbering = new Intl.NumberFormat('id')
   return (
     <div className="d-flex ">
       <div>
-        <img src={prod1} className="rounded-3" width={100} alt="prod-item"/>
+        {/* <img src={item.item.order.product.image} className="rounded-3" width={100} alt="prod-item"/> */}
       </div>
       <div className="px-3">
         <div className="mb-3">
           <text className="fw-bold fs-4" style={{ color: "#BD0707" }}>
-            Ice Coffe Palm Sugar
+
+          {item.product.title}
           </text>
           <br />
           <text className="fw-light" style={{ color: "#BD0707" }}>
@@ -22,11 +24,11 @@ export default function ItemsTransaction() {
             <span className="fw-semibold" style={{ color: "#974A4A" }}>
               Toping
             </span>{" "}
-            : Bill Berry Boba, Buble Tea Gelatin
+            : {item.toping?.map((element) => element.title)}
           </text>{" "}
           <br />
           <text className="fw-light" style={{ color: "#974A4A" }}>
-            <span>Price : Rp.36.000</span>
+            <span>Price :   Rp.{numbering.format(item.sub_amount)}</span>
           </text>
         </div>
       </div>
