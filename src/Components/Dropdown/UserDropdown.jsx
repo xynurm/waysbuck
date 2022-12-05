@@ -18,7 +18,7 @@ export default function UserDropdown({logOut}) {
       <Nav.Link className="pt-4 px-4">
       <Link to="/cart" className="text-decoration-none text-dark">
         <img src={cart} alt="" />
-        { (orders?.length >= 1) &&  <Badge bg="danger">{orders?.length}</Badge>}
+        { (orders?.length >= 1 && orders?.transaction_id == null) &&  <Badge bg="danger">{orders?.length}</Badge>}
         </Link>
       </Nav.Link>
       <Nav.Link align="center">
