@@ -7,7 +7,7 @@ import { API } from "../../config/api";
 
 export default function MyProfile() {
 
-  let { data: profile } = useQuery("userCache", async () => {
+  let { data: profile } = useQuery("profilesData", async () => {
     const response = await API.get("/profiles");
     return response.data.data;
   });

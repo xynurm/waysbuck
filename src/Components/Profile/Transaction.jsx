@@ -63,12 +63,12 @@ export default function Transaction() {
                     className="fw-semibold"
                     style={{ color: "#00D1FF", fontSize: "14px" }}
                   >
-                  {transaction.status}
+                  {transaction?.status}
                   </p>
                 </div>
                 <div className="mb-3">
                   <p className="fw-semibold" style={{ color: "#974A4A" }}>
-                    Sub Total : {numbering.format(transaction.amount)}
+                    Sub Total : {numbering.format(transaction?.amount)}
                   </p>
                 </div>
               </div>
