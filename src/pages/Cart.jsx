@@ -1,10 +1,7 @@
-import React from "react";
-import { useEffect } from "react";
-import { useContext } from "react";
-import { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import btnUpload from "../assets/img/btn_upload.png";
 import ReviewOrder from "../Components/Cart";
 import { API } from "../config/api";
@@ -51,12 +48,11 @@ export default function Cart() {
   });
   let navigate = useNavigate();
 
-  const [state, dispatch] = useContext(UserContext);
+  const [state] = useContext(UserContext);
 
   let resultTotal = orders?.reduce((accum, item) => {
     return accum + item.sub_amount;
   }, 0);
-
 
   const numbering = new Intl.NumberFormat("id");
 
@@ -101,7 +97,6 @@ export default function Cart() {
 
   const handleSubmit = useMutation(async (e) => {
     try {
-
       const formData = new FormData();
       formData.set("phone", form.phone);
       formData.set("pos_code", form.pos_code);
@@ -110,21 +105,21 @@ export default function Cart() {
 
       const config = {
         headers: {
-          "Content-type": "application/json",
-        },
+          "Content-type": "application/json"
+        }
       };
       const data = {
-        amount: resultTotal,
+        amount: resultTotal
       };
-      const body = JSON.stringify(data)
+      const body = JSON.stringify(data);
       const response = await API.post("/transaction", body, config);
 
-      const idTransaction = response.data.data.id
-      for (let i=0; i<orders.length; i++){
-        API.patch(`/cart/${orders[i].id}`, {"transaction_id": idTransaction} )
+      const idTransaction = response.data.data.id;
+      for (let i = 0; i < orders.length; i++) {
+        API.patch(`/cart/${orders[i].id}`, { transaction_id: idTransaction });
       }
 
-      const snapToken = await API.get(`/midtrans/${idTransaction}`)
+      const snapToken = await API.get(`/midtrans/${idTransaction}`);
       const token = snapToken.data.data.token;
       window.snap.pay(token, {
         onSuccess: function (result) {
@@ -146,11 +141,8 @@ export default function Cart() {
           alert("you closed the popup without finishing the payment");
         }
       });
-
-    
     } catch (err) {
       console.log(err);
-      
     }
   });
 
@@ -159,7 +151,7 @@ export default function Cart() {
     const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
     //change this according to your client-key
     // const myMidtransClientKey = process.env.REACT_APP_MIDTRANS_CLIENT_KEY;
-    const myMidtransClientKey = "SB-Mid-client-m9h4S-nw-g1T5Qcy"
+    const myMidtransClientKey = "SB-Mid-client-m9h4S-nw-g1T5Qcy";
     let scriptTag = document.createElement("script");
     scriptTag.src = midtransScriptUrl;
     // optional if you want to set script attribute

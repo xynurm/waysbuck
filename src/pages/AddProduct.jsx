@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import {
   Button,
   Col,
-  Container,
-  FormControl,
+  Container, Form, FormControl,
   FormGroup,
-  Row,
-  Form
+  Row
 } from "react-bootstrap";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
 import { API } from "../config/api";
 
 const Text = {
@@ -37,8 +34,6 @@ const CustomBtn = {
 };
 
 export default function AddProduct() {
-  const navigate = useNavigate();
-
   const [preview, setPreview] = useState(null); //For image preview
   const [form, setForm] = useState({
     title: "",
@@ -67,7 +62,6 @@ export default function AddProduct() {
       formData.set("price", form.price);
       const response = await API.post("/product", formData);
       console.log("data porduct berhasil ditambahkan", response.data.data);
-      
     } catch (err) {
       console.log(err);
 
@@ -125,10 +119,7 @@ export default function AddProduct() {
         <Col sm={5} className="pt-5 px-5">
           {preview && (
             <div>
-              <img
-                src={preview}
-                alt={preview}
-              />
+              <img src={preview} alt={preview} />
             </div>
           )}
         </Col>
