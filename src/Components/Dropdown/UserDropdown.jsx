@@ -6,19 +6,18 @@ import cart from "../../assets/img/cart.png";
 import profile from "../../assets/img/profile.png";
 import { API } from "../../config/api";
 
-export default function UserDropdown({logOut}) {
+export default function UserDropdown({ logOut }) {
   const { data: orders } = useQuery("ordersCache", async () => {
     const response = await API.get("/orders");
     return response.data.data;
   });
-  
 
   return (
     <>
       <Nav.Link className="pt-4 px-4">
-      <Link to="/cart" className="text-decoration-none text-dark">
-        <img src={cart} alt="" />
-        { (orders?.length >= 1 && orders?.transaction_id == null) &&  <Badge bg="danger">{orders?.length}</Badge>}
+        <Link to="/cart" className="text-decoration-none text-dark">
+          <img src={cart} alt="" />
+          {orders?.length >= 1 && <Badge bg="danger">{orders?.length}</Badge>}
         </Link>
       </Nav.Link>
       <Nav.Link align="center">

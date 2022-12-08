@@ -1,16 +1,29 @@
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
+import { useContext } from "react";
 import { Card, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { setAuthToken } from "../../config/api";
+import { UserContext } from "../../context/userContext";
+import Login from "../Auth/Login";
 
 export default function OrderItems({item}) {
   const navigate = useNavigate();
+  const [showlogin, setShowLogin] = useState(false);
+  const handleCloseLogin = () => setShowLogin(false);
+  const handleShowLogin = () => setShowLogin(true);
+
   const numbering = new Intl.NumberFormat('id')
+  const [state, dispatch] = useContext(UserContext);
+
   return (
-    <Col sm={3}>
+    <>
+      <Col sm={3}>
       <Card
         className="mb-4"
-        onClick={() => {
-          navigate(`/product/`+ item.id);
+        onClick={() => { state.isLogin ?
+          navigate(`/product/`+ item.id) : handleShowLogin()
         }}
         style={{
           width: "241px",
@@ -30,5 +43,13 @@ export default function OrderItems({item}) {
         </Card.Body>
       </Card>
     </Col>
+        
+      <Login
+      showlogin={showlogin}
+      handleCloseLogin={handleCloseLogin}
+
+    />
+    </>
+  
   );
 }

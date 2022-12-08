@@ -85,7 +85,7 @@ export default function Register({
             name="Register"
             onClick={(e) => handleSubmit.mutate(e)}
           />
-          <FooterText title="Don't have account?" click={linkLogin} />
+          <FooterText title="Have an Account?" click={linkLogin} />
         </Form>
       </Modal.Body>
     </Modal>

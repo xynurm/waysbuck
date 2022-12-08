@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { API } from "../../config/api";
 import { UserContext } from "../../context/userContext";
 import BtnAuth from "./molecules/BtnAuth";
@@ -22,9 +23,9 @@ const Styles = {
   }
 };
 
-export default function Login({ showlogin, handleCloseLogin, linkRegister }) {
+export default function Login({ showlogin, handleCloseLogin, linkRegister  }) {
   const [state, dispatch] = useContext(UserContext);
-
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
     password: ""
@@ -37,25 +38,24 @@ export default function Login({ showlogin, handleCloseLogin, linkRegister }) {
     });
   };
 
-
-
   const handleSubmit = useMutation(async (e) => {
     try {
+      
       const response = await API.post("/login", form);
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: response.data.data
       });
-      window.location.reload()
-      handleCloseLogin()
-      alert("login success")
+     navigate(0)
+     alert("Login success")
     } catch (err) {
       console.log(err);
-      handleCloseLogin()
-      alert("login failed")
+      alert("login failed");
     }
   });
-  
+;
+
+
   return (
     <Modal show={showlogin} onHide={handleCloseLogin} centered>
       <Modal.Body>

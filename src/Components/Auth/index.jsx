@@ -37,7 +37,7 @@ export default function Auth() {
     }
     if (state.user.role === "admin") {
       navigate("/admin");
-    } else {
+    } else{
       navigate("/");
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps

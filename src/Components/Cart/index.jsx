@@ -16,7 +16,7 @@ const Text = {
 };
 
 export default function ReviewOrder({ item }) {
-  const {refetch } = useQuery("cartsCache", async () => {
+  const { refetch } = useQuery("cartsCache", async () => {
     const response = await API.get("/orders");
     return response.data.data;
   });
@@ -43,7 +43,6 @@ export default function ReviewOrder({ item }) {
     try {
       await API.delete(`/order/${id}`);
       refetch();
-
     } catch (error) {
       console.log(error);
     }
@@ -59,11 +58,9 @@ export default function ReviewOrder({ item }) {
     }
   }, [confirmDelete]);
 
-  
   const numbering = new Intl.NumberFormat("id");
   return (
     <>
- 
       <div className="d-flex justify-content-between my-4">
         <Row>
           <Col sm={3}>
