@@ -112,7 +112,7 @@ export default function ReviewCart() {
           <div className="my-4">
             <p style={Text.Red}>Rp.{numbering.format(orders.sub_amount)}</p>
             <div className="float-end">
-              <Link to="#">
+              <a href="#">
                 <img
                   src={trash}
                   alt="trash"
@@ -120,7 +120,7 @@ export default function ReviewCart() {
                     handleDelete(orders.id);
                   }}
                 />
-              </Link>
+              </a>
             </div>
           </div>
         </div>
