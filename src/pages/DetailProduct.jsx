@@ -11,8 +11,8 @@ export default function DetailProduct() {
   let { id } = useParams();
 
   // set toping and toping id
-  const [toping, setToping] = useState([]);
-  const [topingID, setTopingID] = useState([]);
+  const [toping, setToping] = useState([0]);
+  const [topingID, setTopingID] = useState([0]);
 
   // make handle toping
   const handleChangeToping = (e) => {
