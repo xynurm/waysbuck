@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { Col, Form, Row } from "react-bootstrap";
-import { useMutation, useQuery } from "react-query";
-import trash from "../../assets/img/trash.png";
-import { API } from "../../config/api";
-import btnUpload from "../../assets/img/btn_upload.png";
-import ModalDelete from "../ModalDelete";
+import React, { useEffect, useState } from 'react';
+import { Col, Form, Row } from 'react-bootstrap';
+import { useMutation, useQuery } from 'react-query';
+import trash from '../../assets/img/trash.png';
+import { API } from '../../config/api';
+import btnUpload from '../../assets/img/btn_upload.png';
+import ModalDelete from '../ModalDelete';
 const Text = {
   Red: {
-    color: "#BD0707"
+    color: '#BD0707'
   },
 
   Brown: {
-    color: "#974A4A"
+    color: '#974A4A'
   }
 };
 
 const Hr = {
   Red: {
-    border: " 1px solid #BD0707"
+    border: ' 1px solid #BD0707'
   },
 
   Brown: {
-    border: "1px solid #974A4A"
+    border: '1px solid #974A4A'
   }
 };
 
@@ -33,10 +33,10 @@ export default function ReviewCart() {
   const [idDelete, setIdDelete] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const numbering = new Intl.NumberFormat("id");
+  const numbering = new Intl.NumberFormat('id');
 
-  const { orders, refetch } = useQuery("cartsCache", async () => {
-    const response = await API.get("/orders");
+  const { orders, refetch } = useQuery('cartsCache', async () => {
+    const response = await API.get('/orders');
     return response.data.data;
   });
 
@@ -54,7 +54,7 @@ export default function ReviewCart() {
   });
 
   const handleDelete = (id) => {
-    console.log("data id yang dipilih", id);
+    console.log('data id yang dipilih', id);
     setIdDelete(id);
     handleShow();
   };
@@ -102,8 +102,8 @@ export default function ReviewCart() {
                   {orders.product.title}
                 </p>
                 <p className="fw-semibold" style={Text.Red}>
-                  {" "}
-                  <span style={Text.Brown}>Toping :</span>{" "}
+                  {' '}
+                  <span style={Text.Brown}>Toping :</span>{' '}
                   {orders.toping?.map((element) => element.title)}
                 </p>
               </div>
@@ -112,13 +112,15 @@ export default function ReviewCart() {
           <div className="my-4">
             <p style={Text.Red}>Rp.{numbering.format(orders.sub_amount)}</p>
             <div className="float-end">
-              <img
-                src={trash}
-                alt="trash"
-                onClick={() => {
-                  handleDelete(orders.id);
-                }}
-              />
+              <Link to="#">
+                <img
+                  src={trash}
+                  alt="trash"
+                  onClick={() => {
+                    handleDelete(orders.id);
+                  }}
+                />
+              </Link>
             </div>
           </div>
         </div>
@@ -155,7 +157,7 @@ export default function ReviewCart() {
             <Form.Group className="float-end">
               <input className="form-control" type="file" id="upload" hidden />
               <label for="upload">
-                {" "}
+                {' '}
                 <img src={btnUpload} alt="btn-upload" />
               </label>
             </Form.Group>
