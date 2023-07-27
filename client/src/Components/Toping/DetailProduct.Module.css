@@ -1,0 +1,17 @@
+input[type="checkbox"] {
+-webkit-appearance: none;
+appearance: none;;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+  border:none;
+}
+
+input[type="checkbox"]:after {
+  position: absolute;
+  right: 10px;
+}
+
+input[type="checkbox"]:checked:after {
+  content: url(../../assets/img/check.png);
+}
