@@ -7,6 +7,7 @@ import (
 	"dumbmerch/repositories"
 	"encoding/json"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -52,10 +53,10 @@ func (h *handlerOrder) FindOrders(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(response)
 			return
 		}
-		// for i, p := range orders {
-		// 	orders[i].Product.Image = os.Getenv("PATH_FILE") + p.Product.Image
+		for i, p := range orders {
+			orders[i].Product.Image = os.Getenv("PATH_FILE") + p.Product.Image
 
-		// }
+		}
 		var responseOrder []orderdto.OrderResponse
 
 		for _, t := range orders {

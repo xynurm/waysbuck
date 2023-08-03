@@ -40,10 +40,10 @@ func (h *handlerToping) FindTopings(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create Embed Path File on Image property here ...
-	// for i, p := range topings {
-	// 	topings[i].Image = os.Getenv("PATH_FILE") + p.Image
+	for i, p := range topings {
+		topings[i].Image = os.Getenv("PATH_FILE") + p.Image
 
-	// }
+	}
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: "success", Data: topings}
@@ -65,7 +65,7 @@ func (h *handlerToping) GetToping(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create Embed Path File on Image property here ...
-	// toping.Image = os.Getenv("PATH_FILE") + toping.Image
+	toping.Image = os.Getenv("PATH_FILE") + toping.Image
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: "success", Data: convertResponseToping(toping)}

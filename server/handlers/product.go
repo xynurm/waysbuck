@@ -43,10 +43,10 @@ func (h *handlerProduct) FindProducts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create Embed Path File on Image property here ...
-	// for i, p := range products {
-	// 	products[i].Image = os.Getenv("PATH_FILE") + p.Image
+	for i, p := range products {
+		products[i].Image = os.Getenv("PATH_FILE") + p.Image
 
-	// }
+	}
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: "success", Data: products}
@@ -68,7 +68,7 @@ func (h *handlerProduct) GetProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// // Create Embed Path File on Image property here ...
-	// product.Image = os.Getenv("PATH_FILE") + product.Image
+	product.Image = os.Getenv("PATH_FILE") + product.Image
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: "success", Data: convertResponseProduct(product)}
