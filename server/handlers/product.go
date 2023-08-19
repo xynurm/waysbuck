@@ -1,20 +1,16 @@
 package handlers
 
 import (
-	"context"
 	productdto "dumbmerch/dto/product"
 	dto "dumbmerch/dto/result"
 	"dumbmerch/models"
 	"dumbmerch/repositories"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
-	"github.com/cloudinary/cloudinary-go/v2"
-	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
@@ -44,8 +40,7 @@ func (h *handlerProduct) FindProducts(w http.ResponseWriter, r *http.Request) {
 
 	// Create Embed Path File on Image property here ...
 	for i, p := range products {
-		products[i].Image = os.Getenv("PATH_FILE") + p.Image
-
+		products[i].Image = path_file + p.Image
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -93,6 +88,7 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	request := productdto.ProductRequest{
 		Name:  r.FormValue("title"),
 		Price: price,
+		Image: r.FormValue("image"),
 	}
 
 	validation := validator.New()
@@ -105,27 +101,27 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get datidlaFile from meware and store to filename variable here ...
-	dataContex := r.Context().Value("dataFile")
-	filepath := dataContex.(string)
+	// dataContex := r.Context().Value("dataFile")
+	// filepath := dataContex.(string)
 
-	var ctx = context.Background()
-	var CLOUD_NAME = os.Getenv("CLOUD_NAME")
-	var API_KEY = os.Getenv("API_KEY")
-	var API_SECRET = os.Getenv("API_SECRET")
+	// var ctx = context.Background()
+	// var CLOUD_NAME = os.Getenv("CLOUD_NAME")
+	// var API_KEY = os.Getenv("API_KEY")
+	// var API_SECRET = os.Getenv("API_SECRET")
 
-	// Add your Cloudinary credentials ...
-	cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
+	// // Add your Cloudinary credentials ...
+	// cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
 
-	// Upload file to Cloudinary ...
-	resp, err := cld.Upload.Upload(ctx, filepath, uploader.UploadParams{Folder: "waysbuck"})
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+	// // Upload file to Cloudinary ...
+	// resp, err := cld.Upload.Upload(ctx, filepath, uploader.UploadParams{Folder: "waysbuck"})
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
 
 	product := models.Product{
 		Name:  request.Name,
 		Price: request.Price,
-		Image: resp.SecureURL,
+		Image: request.Image,
 	}
 
 	product, err = h.ProductRepository.CreateProduct(product)
@@ -179,7 +175,12 @@ func (h *handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 	product, err := h.ProductRepository.GetProduct(id)
-
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		response := dto.ErrorResult{Code: http.StatusNotFound, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 	product.UpdatedAt = time.Now()
 
 	if request.Name != "" {

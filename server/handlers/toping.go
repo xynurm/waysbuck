@@ -1,20 +1,16 @@
 package handlers
 
 import (
-	"context"
 	dto "dumbmerch/dto/result"
 	topingdto "dumbmerch/dto/toping"
 	"dumbmerch/models"
 	"dumbmerch/repositories"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
-	"github.com/cloudinary/cloudinary-go/v2"
-	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
@@ -101,27 +97,27 @@ func (h *handlerToping) CreateToping(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dataContex := r.Context().Value("dataFile")
-	filepath := dataContex.(string)
+	// dataContex := r.Context().Value("dataFile")
+	// filepath := dataContex.(string)
 
-	var ctx = context.Background()
-	var CLOUD_NAME = os.Getenv("CLOUD_NAME")
-	var API_KEY = os.Getenv("API_KEY")
-	var API_SECRET = os.Getenv("API_SECRET")
+	// var ctx = context.Background()
+	// var CLOUD_NAME = os.Getenv("CLOUD_NAME")
+	// var API_KEY = os.Getenv("API_KEY")
+	// var API_SECRET = os.Getenv("API_SECRET")
 
-	// Add your Cloudinary credentials ...
-	cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
+	// // Add your Cloudinary credentials ...
+	// cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
 
-	// Upload file to Cloudinary ...
-	resp, err := cld.Upload.Upload(ctx, filepath, uploader.UploadParams{Folder: "waysbuck"})
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+	// // Upload file to Cloudinary ...
+	// resp, err := cld.Upload.Upload(ctx, filepath, uploader.UploadParams{Folder: "waysbuck"})
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
 
 	toping := models.Toping{
 		Name:  request.Name,
 		Price: request.Price,
-		Image: resp.SecureURL,
+		Image: request.Image,
 	}
 
 	toping, err = h.TopingRepository.CreateToping(toping)
@@ -175,6 +171,12 @@ func (h *handlerToping) UpdateToping(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 	toping, err := h.TopingRepository.GetToping(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		response := dto.ErrorResult{Code: http.StatusNotFound, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 	toping.Name = request.Name
 	toping.Price = request.Price
 

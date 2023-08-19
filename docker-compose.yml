@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ./client
+    ports:    
+      - "3000:3000"
+    image: waysbuck-client:latest   # Set image name for the frontend service
+
+  backend:
+    build:
+      context: ./server
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgres://dbuser:dbpassword@database/waysbuck
+    image: waysbucks-server:latest   # Set image name for the backend service
+
+  database:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: waysbuck
+    ports:
+      - "5435:5432"

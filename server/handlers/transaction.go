@@ -16,14 +16,13 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
 	"github.com/midtrans/midtrans-go"
-	"github.com/midtrans/midtrans-go/coreapi"
 	"github.com/midtrans/midtrans-go/snap"
 )
 
-var c = coreapi.Client{
-	ServerKey: os.Getenv("SERVER_KEY"),
-	ClientKey: os.Getenv("CLIENT_KEY"),
-}
+// var c = coreapi.Client{
+// 	ServerKey: os.Getenv("SERVER_KEY"),
+// 	ClientKey: os.Getenv("CLIENT_KEY"),
+// }
 
 type handlerTransaction struct {
 	TransactionRepository repositories.TransactionRepository

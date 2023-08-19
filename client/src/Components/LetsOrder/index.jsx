@@ -2,8 +2,6 @@ import React from "react";
 import { Container, Row } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { API } from "../../config/api";
-import Login from "../Auth/Login";
-import Register from "../Auth/Register";
 import OrderItems from "./OrderItems";
 
 export default function LetsOrder() {
