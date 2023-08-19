@@ -84,11 +84,15 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Store to local
+
+	dataContex := r.Context().Value("dataFile")
+	filename := dataContex.(string)
+
 	price, _ := strconv.Atoi(r.FormValue("price"))
 	request := productdto.ProductRequest{
 		Name:  r.FormValue("title"),
 		Price: price,
-		Image: r.FormValue("image"),
 	}
 
 	validation := validator.New()
@@ -121,7 +125,7 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	product := models.Product{
 		Name:  request.Name,
 		Price: request.Price,
-		Image: request.Image,
+		Image: filename,
 	}
 
 	product, err = h.ProductRepository.CreateProduct(product)

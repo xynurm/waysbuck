@@ -31,7 +31,7 @@ func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 		r.ParseMultipartForm(MAX_UPLOAD_SIZE)
 		if r.ContentLength > MAX_UPLOAD_SIZE {
 			w.WriteHeader(http.StatusBadRequest)
-			response := Result{Code: http.StatusBadRequest, Message: "Max size in 10mb"}
+			response := Result{Code: http.StatusBadRequest, Message: "Max size in 1mb"}
 			json.NewEncoder(w).Encode(response)
 			return
 		}
@@ -58,9 +58,10 @@ func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 		tempFile.Write(fileBytes)
 
 		data := tempFile.Name()
+		filename := data[8:] // split uploads/
 
 		// add filename to ctx
-		ctx := context.WithValue(r.Context(), "dataFile", data)
+		ctx := context.WithValue(r.Context(), "dataFile", filename)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
