@@ -83,6 +83,10 @@ func (h *handlerToping) CreateToping(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Store to local
+	dataContex := r.Context().Value("dataFile")
+	filename := dataContex.(string)
+
 	request := topingdto.TopingRequest{
 		Name:  r.FormValue("title"),
 		Price: price,
@@ -117,7 +121,7 @@ func (h *handlerToping) CreateToping(w http.ResponseWriter, r *http.Request) {
 	toping := models.Toping{
 		Name:  request.Name,
 		Price: request.Price,
-		Image: request.Image,
+		Image: filename,
 	}
 
 	toping, err = h.TopingRepository.CreateToping(toping)
