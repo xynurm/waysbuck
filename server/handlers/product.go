@@ -21,7 +21,7 @@ type handlerProduct struct {
 }
 
 // Create `path_file` Global variable here ...
-var path_file = os.Getenv("PATH_FILE")
+// var path_file = os.Getenv("PATH_FILE")
 
 func HandlerProduct(ProductRepository repositories.ProductRepository) *handlerProduct {
 	return &handlerProduct{ProductRepository}
@@ -40,7 +40,7 @@ func (h *handlerProduct) FindProducts(w http.ResponseWriter, r *http.Request) {
 
 	// Create Embed Path File on Image property here ...
 	for i, p := range products {
-		products[i].Image = path_file + p.Image
+		products[i].Image = os.Getenv("PATH_FILE") + p.Image
 	}
 
 	w.WriteHeader(http.StatusOK)
