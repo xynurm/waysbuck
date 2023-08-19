@@ -85,7 +85,6 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store to local
-
 	dataContex := r.Context().Value("dataFile")
 	filename := dataContex.(string)
 
